@@ -1,4 +1,4 @@
-# superticket
+# SuperTicket
  Software para gerenciamento de atendimentos Help Desk
 
 ## Diagrama de Classes (Domínio da API)
