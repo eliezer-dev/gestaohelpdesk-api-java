@@ -15,7 +15,7 @@ classDiagram
   }
 
   class Client {
-    -String RazaoSocialorName
+    -String razaoSocialOrName
     -String cpfOrCnpj
     -String cep
     -String address
