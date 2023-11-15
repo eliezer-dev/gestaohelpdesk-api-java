@@ -11,13 +11,13 @@ public class Ticket {
     private Long id;
     private String shortDescription;
     private String description;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Client client;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
-    private LocalDate dateStart;
-    private LocalDate dateEnd;
+/*    private LocalDate dateStart;
+    private LocalDate dateEnd;*/
 
     public Long getId() {
         return id;
@@ -59,19 +59,19 @@ public class Ticket {
         this.status = status;
     }
 
-    public LocalDate getDateStart() {
-        return dateStart;
-    }
-
-    public void setDateStart(LocalDate dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public LocalDate getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
-    }
+//    public LocalDate getDateStart() {
+//        return dateStart;
+//    }
+//
+//    public void setDateStart(LocalDate dateStart) {
+//        this.dateStart = dateStart;
+//    }
+//
+//    public LocalDate getDateEnd() {
+//        return dateEnd;
+//    }
+//
+//    public void setDateEnd(LocalDate dateEnd) {
+//        this.dateEnd = dateEnd;
+//    }
 }
