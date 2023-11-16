@@ -12,7 +12,6 @@ public class Client {
     Long id;
     String cpfOrCnpj;
     String razaoSocialOrName;
-
     String cep;
     String address;
     String addressNumber;
