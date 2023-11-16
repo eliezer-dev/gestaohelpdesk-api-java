@@ -3,6 +3,7 @@ package dev.eliezer.superticket.domain.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity(name = "tb_tickets")
 public class Ticket {
@@ -13,6 +14,9 @@ public class Ticket {
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
     private Client client;
+
+    @ManyToMany
+    private List<User> user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
@@ -49,6 +53,14 @@ public class Ticket {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
     }
 
     public Status getStatus() {
