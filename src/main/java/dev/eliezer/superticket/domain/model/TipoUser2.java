@@ -1,4 +1,4 @@
 package dev.eliezer.superticket.domain.model;
 
-public class TipoUser {
+public class TipoUser2 {
 }
