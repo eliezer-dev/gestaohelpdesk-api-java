@@ -2,14 +2,17 @@ package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.Ticket;
 import dev.eliezer.superticket.service.TicketService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin //cors
 @RestController
 @RequestMapping("/tickets")
+@Tag(name = "Tickets Controller", description = "RESTful API for managing users.")
 public class TicketRestController {
     private final TicketService ticketService;
     private TicketRestController (TicketService ticketService){
