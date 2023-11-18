@@ -14,6 +14,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public Iterable<User> findAll() {
+        System.out.println(userRepository.findAll());
         return userRepository.findAll();
     }
 
