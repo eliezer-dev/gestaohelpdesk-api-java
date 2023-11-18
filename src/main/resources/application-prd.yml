@@ -8,3 +8,7 @@ spring:
     hibernate:
       ddl-auto: create
       debug: true
+springdoc:
+  swagger-ui:
+    path: /documentation
+    disable-swagger-default-url: true

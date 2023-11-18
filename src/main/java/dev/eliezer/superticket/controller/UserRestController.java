@@ -15,11 +15,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Users Controller", description = "RESTful API for managing users.") //annotation for Swagger
-public class UserRestController {
-    private final UserService userService;
-    private UserRestController (UserService userService){
-        this.userService = userService;
-    }
+public record UserRestController(UserService userService) {
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")//annotation for Swagger

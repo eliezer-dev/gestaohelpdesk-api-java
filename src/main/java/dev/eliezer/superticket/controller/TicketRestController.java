@@ -16,11 +16,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/tickets")
 @Tag(name = "Tickets Controller", description = "RESTful API for managing tickets.") //annotation for Swagger
-public class TicketRestController {
-    private final TicketService ticketService;
-    private TicketRestController (TicketService ticketService){
-        this.ticketService = ticketService;
-    }
+public record TicketRestController(TicketService ticketService) {
 
     @GetMapping
     @Operation(summary = "Get all tickets", description = "Retrieve a list of all registered tickets")//annotation for Swagger
