@@ -10,9 +10,9 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String shortDescription;
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
     private Client client;

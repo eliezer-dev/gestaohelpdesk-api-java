@@ -1,6 +1,6 @@
 package dev.eliezer.superticket.controller.exception;
 
-//import dev.eliezer.superticket.service.exception.BusinessException;
+import dev.eliezer.superticket.service.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
-//@RestControllerAdvice
-//public class GlobalExceptionHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
-//    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-//
-//    @ExceptionHandler(BusinessException.class)
-//    public ResponseEntity<String> handleBusinessException(BusinessException ex) {
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-//    }
-//
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<String> handleBusinessException(BusinessException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
 //    @ExceptionHandler(NotFoundException.class)
 //    public ResponseEntity<String> handleNoContentException() {
 //        return new ResponseEntity<>("Resource ID not found.", HttpStatus.NOT_FOUND);
@@ -30,5 +30,5 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 //        LOGGER.error(message, unexpectedException);
 //        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
-//}
+}
 
