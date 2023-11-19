@@ -18,7 +18,7 @@ public class TicketServiceImpl implements TicketService {
 //    private final UserRepository userRepository;
 //    private final StatusRepository statusRepository;
 
-    private TicketServiceImpl(TicketRepository ticketRepository, ClientRepository clientRepository, UserRepository userRepository, StatusRepository statusRepository ){
+    private TicketServiceImpl(TicketRepository ticketRepository){
         this.ticketRepository = ticketRepository;
 //        this.clientRepository = clientRepository;
 //        this.userRepository = userRepository;

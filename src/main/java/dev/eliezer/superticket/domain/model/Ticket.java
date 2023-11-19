@@ -17,7 +17,7 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.EAGER)
     private Client client;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> user;
 
     @ManyToOne(fetch = FetchType.EAGER)
