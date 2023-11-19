@@ -3,6 +3,7 @@ package dev.eliezer.superticket.service.impl;
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.service.UserService;
+import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override

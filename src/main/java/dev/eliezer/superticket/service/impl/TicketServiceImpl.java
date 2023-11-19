@@ -7,6 +7,7 @@ import dev.eliezer.superticket.domain.repository.TicketRepository;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.exception.BusinessException;
+import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 
@@ -31,7 +32,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket findById(Long id) {
-        return ticketRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return ticketRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     @Override
@@ -42,7 +43,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket update(Long id, Ticket ticket) {
-        Ticket ticketToChange =  ticketRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Ticket ticketToChange =  ticketRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        ticketValidator(ticket);
         ticketToChange.setClient(ticket.getClient());
         ticketToChange.setShortDescription(ticket.getShortDescription());
         ticketToChange.setDescription(ticket.getDescription());;
@@ -51,7 +53,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void delete(Long id) {
-        ticketRepository.deleteById(id);
+        Ticket ticketToDelete = ticketRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        ticketRepository.delete(ticketToDelete);
     }
 
     private void ticketValidator(Ticket ticket){

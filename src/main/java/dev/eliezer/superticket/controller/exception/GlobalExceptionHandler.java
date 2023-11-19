@@ -1,6 +1,7 @@
 package dev.eliezer.superticket.controller.exception;
 
 import dev.eliezer.superticket.service.exception.BusinessException;
+import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-//    @ExceptionHandler(NotFoundException.class)
-//    public ResponseEntity<String> handleNoContentException() {
-//        return new ResponseEntity<>("Resource ID not found.", HttpStatus.NOT_FOUND);
-//    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNoContentException(NotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 //
 //    @ExceptionHandler(Throwable.class)
 //    public ResponseEntity<String> handleUnexpectedException(Throwable unexpectedException) {
