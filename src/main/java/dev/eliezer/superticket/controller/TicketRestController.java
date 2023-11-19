@@ -2,6 +2,7 @@ package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.Ticket;
 import dev.eliezer.superticket.service.TicketService;
+import dev.eliezer.superticket.service.impl.TicketServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,8 +17,11 @@ import java.net.URI;
 @RestController
 @RequestMapping("/tickets")
 @Tag(name = "Tickets Controller", description = "RESTful API for managing tickets.") //annotation for Swagger
-public record TicketRestController(TicketService ticketService) {
-
+public class TicketRestController {
+    private final TicketService ticketService;
+    private TicketRestController (TicketService ticketService){
+        this.ticketService = ticketService;
+    }
     @GetMapping
     @Operation(summary = "Get all tickets", description = "Retrieve a list of all registered tickets")//annotation for Swagger
     @ApiResponses(value = {
