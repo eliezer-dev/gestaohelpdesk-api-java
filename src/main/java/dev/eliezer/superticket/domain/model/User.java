@@ -6,15 +6,15 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    String cpf;
+    private Long id;
+    private String name;
+    private String cpf;
 
-    String cep;
-    String address;
-    String addressNumber;
-    String state;
-    String city;
+    private String cep;
+    private String address;
+    private String addressNumber;
+    private String state;
+    private String city;
 
     public Long getId() {
         return id;
@@ -79,4 +79,6 @@ public class User {
     public void setCity(String city) {
         this.city = city;
     }
+
+
 }
