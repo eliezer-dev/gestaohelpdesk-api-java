@@ -60,14 +60,6 @@ public class TicketServiceImpl implements TicketService {
 
     private void ticketValidator(Ticket ticket){
 
-        if (checkIfTicketIsEmpty(ticket))
-            throw new BusinessException("This ticket data is empty");
-
-        //checkIfPropertiesIsNull
-        if (ticket.getShortDescription() == null)
-            throw new BusinessException("short description is not provided");
-        if (ticket.getDescription() == null)
-            throw new BusinessException("description is not provided");
         if (ticket.getUser() == null)
             throw new BusinessException("User is not provided");
         if (ticket.getClient() == null)
@@ -79,7 +71,7 @@ public class TicketServiceImpl implements TicketService {
         if (ticket.getClient().getId() == null)
             throw new BusinessException("Client is not provided");
         if (!clientRepository.existsById(ticket.getClient().getId()))
-            throw new BusinessException("Client is not exists.");
+            throw new BusinessException("Client with id " + ticket.getClient().getId() + " does not exist.");
 
         //checkifUserExists
         ticket.getUser().forEach(user ->{
@@ -99,12 +91,4 @@ public class TicketServiceImpl implements TicketService {
 
     }
 
-    public boolean checkIfTicketIsEmpty(Ticket ticket) {
-        if (ticket.getShortDescription() != null) return false;
-        if (ticket.getDescription() != null) return false;
-        if (ticket.getClient() != null) return false;
-        if (ticket.getUser() != null) return false;
-        if (ticket.getStatus() != null) return false;
-        return true;
-    }
 }

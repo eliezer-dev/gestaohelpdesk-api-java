@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -44,7 +45,7 @@ public record UserRestController (UserService userService){
             @ApiResponse(responseCode = "201", description = "User created successfully"),
             @ApiResponse(responseCode = "422", description = "Invalid user data provided")
     })
-    public ResponseEntity<User> insert(@RequestBody User userToInsert){
+    public ResponseEntity<User> insert(@Valid @RequestBody User userToInsert){
         var userInserted = userService.insert(userToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -60,7 +61,7 @@ public record UserRestController (UserService userService){
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "422", description = "Invalid user data provided")
     })
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User userToUpdate){
+    public ResponseEntity<User> update(@Valid @PathVariable Long id, @RequestBody User userToUpdate){
         var userUpdated = userService.update(id, userToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

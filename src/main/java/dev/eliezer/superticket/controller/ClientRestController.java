@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,7 +44,7 @@ public record ClientRestController(ClientService clientService) {
             @ApiResponse(responseCode = "201", description = "Client created successfully"),
             @ApiResponse(responseCode = "422", description = "Invalid client data provided")
     })
-    public ResponseEntity<Client> insert(@RequestBody Client clientToInsert){
+    public ResponseEntity<Client> insert(@Valid @RequestBody Client clientToInsert){
         var clientInserted = clientService.insert(clientToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -59,7 +60,7 @@ public record ClientRestController(ClientService clientService) {
             @ApiResponse(responseCode = "404", description = "Client not found"),
             @ApiResponse(responseCode = "422", description = "Invalid client data provided")
     })
-    public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client clientToUpdate){
+    public ResponseEntity<Client> update(@Valid @PathVariable Long id, @RequestBody Client clientToUpdate){
         var clientUpdated = clientService.update(id, clientToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

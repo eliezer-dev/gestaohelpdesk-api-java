@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,14 +44,15 @@ public record StatusRestController(StatusService statusService) {
             @ApiResponse(responseCode = "201", description = "Status created successfully"),
             @ApiResponse(responseCode = "422", description = "Invalid status data provided")
     })
-    public ResponseEntity<Status> insert(@RequestBody Status statusToInsert){
-        var statusInserted = statusService.insert(statusToInsert);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(statusInserted.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(statusInserted);
-    }
+    public ResponseEntity<Status> insert(@Valid @RequestBody Status statusToInsert) {
+            var statusInserted = statusService.insert(statusToInsert);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(statusInserted.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(statusInserted);
+
+        }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a status", description = "Update the data of an existing status based on its ID")

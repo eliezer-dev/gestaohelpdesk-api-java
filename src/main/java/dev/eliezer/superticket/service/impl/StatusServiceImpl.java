@@ -27,13 +27,11 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public Status insert(Status status) {
-        statusValidator(status);
         return statusRepository.save(status);
     }
 
     @Override
     public Status update(Long id, Status status) {
-        statusValidator(status);
         Status statusToChange =  statusRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         statusToChange.setDescription(status.getDescription());
         return statusRepository.save(statusToChange);
@@ -43,19 +41,6 @@ public class StatusServiceImpl implements StatusService {
     public void delete(Long id) {
         Status statusToDelete = statusRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         statusRepository.delete(statusToDelete);
-    }
-
-    private void statusValidator(Status status){
-        //checkIfObjectIsNull
-        if (checkIfStatusIsEmpty(status)) throw new BusinessException("This status data is empty");
-
-        //checkIfPropertiesIsNull
-        if (status.getDescription() == null) throw new BusinessException("description is not provided");
-    }
-
-    public boolean checkIfStatusIsEmpty(Status status) {
-        if (status.getDescription() != null) return false;
-        return true;
     }
 
 }

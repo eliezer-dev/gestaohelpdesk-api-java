@@ -1,6 +1,10 @@
 package dev.eliezer.superticket.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -13,8 +17,10 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
+    @NotBlank(message = "[shortDescription] is not provided.")
     private String shortDescription;
     @Column(nullable = false)
+    @NotBlank(message = "[shortDescription] is not provided.")
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
     private Client client;

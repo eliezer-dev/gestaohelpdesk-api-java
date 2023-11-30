@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -45,7 +46,7 @@ public record TicketRestController(TicketService ticketService) {
             @ApiResponse(responseCode = "201", description = "Ticket created successfully"),
             @ApiResponse(responseCode = "422", description = "Invalid ticket data provided")
     })
-    public ResponseEntity<Ticket> insert(@RequestBody Ticket ticketToInsert){
+    public ResponseEntity<Ticket> insert(@Valid @RequestBody Ticket ticketToInsert){
         var ticketInserted = ticketService.insert(ticketToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -61,7 +62,7 @@ public record TicketRestController(TicketService ticketService) {
             @ApiResponse(responseCode = "404", description = "Ticket not found"),
             @ApiResponse(responseCode = "422", description = "Invalid ticket data provided")
     })
-    public ResponseEntity<Ticket> update(@PathVariable Long id, @RequestBody Ticket ticketToUpdate){
+    public ResponseEntity<Ticket> update(@Valid @PathVariable Long id, @RequestBody Ticket ticketToUpdate){
         var ticketUpdated = ticketService.update(id, ticketToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
