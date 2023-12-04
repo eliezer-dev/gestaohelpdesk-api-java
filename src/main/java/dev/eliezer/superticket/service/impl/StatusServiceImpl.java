@@ -6,15 +6,14 @@ import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.service.StatusService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatusServiceImpl implements StatusService {
-    private final StatusRepository statusRepository;
+    @Autowired
+    private StatusRepository statusRepository;
 
-    private StatusServiceImpl(StatusRepository statusRepository){
-        this.statusRepository = statusRepository;
-    }
     @Override
     public Iterable<Status> findAll() {
         return statusRepository.findAll();

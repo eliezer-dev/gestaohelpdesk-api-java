@@ -5,15 +5,15 @@ import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.service.UserService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
 
-    private UserServiceImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public Iterable<User> findAll() {
         return userRepository.findAll();

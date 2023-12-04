@@ -6,15 +6,15 @@ import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.service.ClientService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClientServiceImpl implements ClientService {
-    private final ClientRepository clientRepository;
 
-    private ClientServiceImpl(ClientRepository clientRepository){
-        this.clientRepository = clientRepository;
-    }
+    @Autowired
+    private ClientRepository clientRepository;
+
     @Override
     public Iterable<Client> findAll() {
         return clientRepository.findAll();

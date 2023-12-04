@@ -9,23 +9,22 @@ import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class TicketServiceImpl implements TicketService {
 
-    private final TicketRepository ticketRepository;
-    private final ClientRepository clientRepository;
-    private final UserRepository userRepository;
-    private final StatusRepository statusRepository;
+    @Autowired
+    private TicketRepository ticketRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private StatusRepository statusRepository;
 
-    private TicketServiceImpl(TicketRepository ticketRepository, ClientRepository clientRepository, UserRepository userRepository, StatusRepository statusRepository){
-        this.ticketRepository = ticketRepository;
-        this.clientRepository = clientRepository;
-        this.userRepository = userRepository;
-        this.statusRepository = statusRepository;
-    }
     @Override
     public Iterable<Ticket> findAll() {
         return ticketRepository.findAll();
