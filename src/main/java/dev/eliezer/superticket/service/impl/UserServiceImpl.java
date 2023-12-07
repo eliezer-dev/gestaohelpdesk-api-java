@@ -6,6 +6,7 @@ import dev.eliezer.superticket.service.UserService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Iterable<User> findAll() {
@@ -26,6 +30,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User insert(User user) {
+        var passwordEncoded = passwordEncoder.encode(user.getPassword());
+        user.setPassword(passwordEncoded);
         return userRepository.save(user);
     }
 

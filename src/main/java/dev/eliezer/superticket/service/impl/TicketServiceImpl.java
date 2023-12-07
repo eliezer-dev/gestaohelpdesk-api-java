@@ -86,7 +86,7 @@ public class TicketServiceImpl implements TicketService {
             throw new BusinessException("Status is not provided");
 
         if (!statusRepository.existsById(ticket.getStatus().getId()))
-            throw new BusinessException("Status is not exists.");
+            throw new BusinessException("Status with id " + ticket.getStatus().getId() + " is not exists.");
 
     }
 

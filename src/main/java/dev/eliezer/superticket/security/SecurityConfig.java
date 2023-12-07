@@ -14,8 +14,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableMethodSecurity
 public class SecurityConfig {
 
-//    @Autowired
-//    private SecurityCompanyFilter securityCompanyFilter;
+    @Autowired
+    private SecurityUserFilter securityUserFilter;
 //
 //    @Autowired
 //    private SecurityCandidateFilter securityCandidateFilter;
@@ -23,13 +23,15 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/status").permitAll()
-                            .requestMatchers("/clients").permitAll()
+                    auth
                             .requestMatchers("/users").permitAll()
-                            .requestMatchers("/tickets").permitAll();
+                            .requestMatchers("/users/auth").permitAll();
+                            //.requestMatchers("/tickets").permitAll();
+                            //.requestMatchers("/clients").permitAll()
+                            //.requestMatchers("/status").permitAll();
                     auth.anyRequest().authenticated();
-                });
-//                .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
+                })
+                .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
 //                .addFilterBefore(securityCompanyFilter, BasicAuthenticationFilter.class);
         return http.build();
     }

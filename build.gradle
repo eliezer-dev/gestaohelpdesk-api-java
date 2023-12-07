@@ -21,6 +21,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.5'
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.1.5'
+	implementation 'com.auth0:java-jwt:4.4.0'
 
 	//lombok - plugin para não usar getters e setters
 	compileOnly 'org.projectlombok:lombok:1.18.30'

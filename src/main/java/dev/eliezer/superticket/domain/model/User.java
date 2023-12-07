@@ -1,9 +1,14 @@
 package dev.eliezer.superticket.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity(name = "tb_users")
@@ -29,5 +34,12 @@ public class User {
     private String state;
     @NotBlank(message = "[city] is not provided.")
     private String city;
+    @Email(message = "[email] invalid.")
+    private String email;
+    @Length(message = "[password] length must be between 8 and 100 characters")
+    private String password;
+    @CreationTimestamp
+    private LocalDateTime createAt;
+
 
 }

@@ -24,3 +24,7 @@ springdoc:
     path: /documentation
     disable-swagger-default-url: true
 
+security:
+  token:
+    secret-user: SUPERTICKET@2024
+

@@ -1,12 +1,16 @@
 package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.dto.AuthUserRequestDTO;
 import dev.eliezer.superticket.service.UserService;
+import dev.eliezer.superticket.service.impl.AuthUserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,7 +20,8 @@ import java.net.URI;
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Users Controller", description = "RESTful API for managing users.") //annotation for Swagger
-public record UserRestController (UserService userService){
+public record UserRestController (UserService userService, AuthUserServiceImpl authUserServiceImpl){
+
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")//annotation for Swagger
@@ -80,4 +85,15 @@ public record UserRestController (UserService userService){
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/auth")
+    public ResponseEntity<Object>auth(@RequestBody AuthUserRequestDTO authUserRequestDTO){
+        try {
+            var token = this.authUserServiceImpl.execute(authUserRequestDTO);
+            return ResponseEntity.ok().body(token);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
 }
