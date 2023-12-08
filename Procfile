@@ -1,0 +1,1 @@
+web: java -jar build/libs/superticket-0.0.2-Final.jar

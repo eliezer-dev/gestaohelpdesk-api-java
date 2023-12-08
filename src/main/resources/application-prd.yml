@@ -6,9 +6,14 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create
-      debug: true
+      ddl-auto: update
+      debug: false
+
 springdoc:
   swagger-ui:
     path: /documentation
     disable-swagger-default-url: true
+
+security:
+  token:
+    secret-user: SUPERTICKET@2024

@@ -23,6 +23,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.1.5'
 	implementation 'com.auth0:java-jwt:4.4.0'
 
+
+
 	//lombok - plugin para não usar getters e setters
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
@@ -42,4 +44,10 @@ tasks.named('bootBuildImage') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.jar{
+	manifest{
+		attributes["Main-Class"] = "dev.eliezer.superticket.Application"
+	}
 }
