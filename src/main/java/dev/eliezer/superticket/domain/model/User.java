@@ -35,6 +35,7 @@ public class User {
     @NotBlank(message = "[city] is not provided.")
     private String city;
     @Email(message = "[email] invalid.")
+    @Column(unique = true)
     private String email;
     @Length(message = "[password] length must be between 8 and 100 characters")
     private String password;

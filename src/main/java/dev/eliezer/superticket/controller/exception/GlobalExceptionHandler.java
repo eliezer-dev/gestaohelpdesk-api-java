@@ -2,6 +2,7 @@ package dev.eliezer.superticket.controller.exception;
 
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -41,6 +44,20 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
         }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+
+    public ResponseEntity<Set> handleConstraintViolationException(ConstraintViolationException e) {
+
+        Set<String> error = new HashSet<>();
+        e.getConstraintViolations().forEach(fieldError -> {
+            error.add(fieldError.getMessageTemplate());
+        });
+
+        return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+
 }
 
 
