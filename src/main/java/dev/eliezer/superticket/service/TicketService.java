@@ -1,14 +1,15 @@
 package dev.eliezer.superticket.service;
 
 import dev.eliezer.superticket.domain.model.Ticket;
+import dev.eliezer.superticket.dto.TicketResponseDTO;
 
 public interface TicketService {
     Iterable<Ticket> findAll();
     Ticket findById(Long id);
 
-    Ticket insert(Ticket ticket);
+    TicketResponseDTO insert(Ticket ticket);
 
-    Ticket update(Long id, Ticket ticket);
+    TicketResponseDTO update(Long id, Ticket ticket);
 
     void delete (Long id);
 }

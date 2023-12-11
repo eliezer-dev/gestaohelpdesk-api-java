@@ -1,6 +1,7 @@
 package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.Ticket;
+import dev.eliezer.superticket.dto.TicketResponseDTO;
 import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.impl.TicketServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,12 +47,13 @@ public record TicketRestController(TicketService ticketService) {
             @ApiResponse(responseCode = "201", description = "Ticket created successfully"),
             @ApiResponse(responseCode = "422", description = "Invalid ticket data provided")
     })
-    public ResponseEntity<Ticket> insert(@Valid @RequestBody Ticket ticketToInsert){
+    public ResponseEntity<TicketResponseDTO> insert(@Valid @RequestBody Ticket ticketToInsert){
         var ticketInserted = ticketService.insert(ticketToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(ticketInserted.getId())
                 .toUri();
+
         return ResponseEntity.created(location).body(ticketInserted);
     }
 
@@ -62,7 +64,7 @@ public record TicketRestController(TicketService ticketService) {
             @ApiResponse(responseCode = "404", description = "Ticket not found"),
             @ApiResponse(responseCode = "422", description = "Invalid ticket data provided")
     })
-    public ResponseEntity<Ticket> update(@Valid @PathVariable Long id, @RequestBody Ticket ticketToUpdate){
+    public ResponseEntity<TicketResponseDTO> update(@Valid @PathVariable Long id, @RequestBody Ticket ticketToUpdate){
         var ticketUpdated = ticketService.update(id, ticketToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
