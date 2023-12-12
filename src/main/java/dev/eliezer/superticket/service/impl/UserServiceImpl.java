@@ -44,9 +44,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO insert(User user) {
-        Optional<User> email = userRepository.findByEmail(user.getEmail());
-        if (email.isPresent()){
-            throw new BusinessException("O e-mail já está cadastrado");
+        Optional<User> userFound = userRepository.findByCpf(user.getCpf());
+        if(userFound.isPresent()) {
+            userFound = null;
+            throw new BusinessException("[cpf] " + user.getCpf() + " já foi utilizado em outro cadastro.");
+        }
+
+        userFound = userRepository.findByEmail(user.getEmail());
+        if(userFound.isPresent()) {
+            throw new BusinessException("[email] " + user.getEmail() + " já foi utilizado em outro cadastro.");
         }
 
         var passwordEncoded = passwordEncoder.encode(user.getPassword());
@@ -57,11 +63,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO update(Long id, User user) {
-        Optional<User> email = userRepository.findByEmail(user.getEmail());
-        if (email.isPresent() && email.get().getId() != id){
-            throw new BusinessException("email cadastro em outro usuário.");
+        Optional<User> userFound = userRepository.findByCpf(user.getCpf());
+        if(userFound.isPresent() && userFound.get().getId() == id) {
+            userFound = null;
+            throw new BusinessException("[cpf] " + user.getCpf() + " já foi utilizado em outro cadastro.");
         }
 
+        userFound = userRepository.findByEmail(user.getEmail());
+        if(userFound.isPresent() && userFound.get().getId() != id) {
+            throw new BusinessException("[email] " + user.getEmail() + " já foi utilizado em outro cadastro.");
+        }
 
         User userToChange =  userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         userToChange.setCpf(user.getCpf());

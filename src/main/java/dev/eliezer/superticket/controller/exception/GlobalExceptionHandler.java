@@ -5,6 +5,7 @@ import dev.eliezer.superticket.service.exception.NotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,12 +59,19 @@ public class GlobalExceptionHandler {
     //Essa exception foi adicionada para quando ocorrer de existir um cliente com cpf/cnpj já cadastrado em outro cliente
     //mas ela sempre ocorre quando um campo estiver marcado como unico no banco, havendo já uma ocorrência dessa informação
     //alguém tentra gravar ela novamente.
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<String> handleConstraintViolationException(SQLIntegrityConstraintViolationException e){
-        String error = "Erro ao salvar os dados no banco de dados.";
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleConstraintViolationException(DataIntegrityViolationException e){
+        String error = "Erro ao salvar cadastro no banco de dados, nada foi alterado.";
         e.printStackTrace();
-        if (e.getMessage().contains("CPF_OR_CNPJ") || e.getMessage().contains("CPF") ){
-            error = "CPF ou CNPJ já informado em outro cadastro.";
+        System.out.println(e.getMessage());
+        System.out.println(e.getCause());
+        System.out.println(e.getRootCause());
+        System.out.println(e.getLocalizedMessage());
+        System.out.println(e.fillInStackTrace());
+
+        if (e.getMessage().contains("cpf") || e.getMessage().contains("email")){
+            String field = e.getMessage().contains("cpf") ? "cpf" : "email";
+            error = "Erro ao salvar cadastro. O " + field + " já foi usado outro cadastro.";
         }
         return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }

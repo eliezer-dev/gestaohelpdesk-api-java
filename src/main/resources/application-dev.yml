@@ -1,23 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:superTicket
-    username: superTicket
-    password:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
   jpa:
-    show-sql: true
     open-in-view: false
     hibernate:
-      ddl-auto: create # validate | update | create | create-drop
-    properties:
-      hibernate:
-        format_sql: true
-  h2:
-    console:
-      enabled: false
-      path: /h2-console
-      settings:
-        trace: false
-        web-allow-others: false
+      ddl-auto: create
+      debug: false
 
 springdoc:
   swagger-ui:
@@ -27,4 +17,3 @@ springdoc:
 security:
   token:
     secret-user: SUPERTICKET@2024
-
