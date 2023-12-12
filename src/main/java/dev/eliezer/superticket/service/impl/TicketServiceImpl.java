@@ -35,13 +35,21 @@ public class TicketServiceImpl implements TicketService {
     private UserServiceImpl userService;
 
     @Override
-    public Iterable<Ticket> findAll() {
-        return ticketRepository.findAll();
+    public Iterable<TicketResponseDTO> findAll() {
+        List<TicketResponseDTO> allTickets = new ArrayList<>();
+        ticketRepository.findAll().forEach(ticket -> {
+            var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+            allTickets.add(ticketDTO);
+        });
+        return allTickets;
     }
 
     @Override
-    public Ticket findById(Long id) {
-        return ticketRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    public TicketResponseDTO findById(Long id) {
+        var ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(id));
+        var ticketResponseDTO = formatTicketToTicketResponseDTO(ticket);
+        return ticketResponseDTO;
     }
 
 

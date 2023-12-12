@@ -25,7 +25,7 @@ public record TicketRestController(TicketService ticketService) {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operation successful")
     })
-    public ResponseEntity<Iterable<Ticket>> findAll(){
+    public ResponseEntity<Iterable<TicketResponseDTO>> findAll(){
         var ticket = ticketService.findAll();
         return ResponseEntity.ok(ticket);
     }
@@ -36,7 +36,7 @@ public record TicketRestController(TicketService ticketService) {
             @ApiResponse(responseCode = "200", description = "Operation successful"),
             @ApiResponse(responseCode = "404", description = "Ticket not found")
     })
-    public ResponseEntity<Ticket> findById(@PathVariable Long id){
+    public ResponseEntity<TicketResponseDTO> findById(@PathVariable Long id){
         var ticket = ticketService.findById(id);
         return ResponseEntity.ok(ticket);
     }

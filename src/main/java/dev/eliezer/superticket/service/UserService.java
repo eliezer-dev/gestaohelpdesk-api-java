@@ -1,14 +1,18 @@
 package dev.eliezer.superticket.service;
 
+import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.dto.UserResponseDTO;
+
+import java.util.List;
 
 public interface UserService {
-    Iterable<User> findAll();
-    User findById(Long id);
+    Iterable<UserResponseDTO> findAll();
+    UserResponseDTO findById(Long id);
 
-    User insert(User user);
+    UserResponseDTO insert(User user);
 
-    User update(Long id, User user);
+    UserResponseDTO update(Long id, User user);
 
     void delete (Long id);
     

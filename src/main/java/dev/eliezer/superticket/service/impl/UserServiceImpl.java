@@ -1,5 +1,6 @@
 package dev.eliezer.superticket.service.impl;
 
+import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.UserResponseDTO;
@@ -7,7 +8,6 @@ import dev.eliezer.superticket.service.UserService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,19 +24,26 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @Override
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
+    public Iterable<UserResponseDTO> findAll() {
+        List<UserResponseDTO> allUsersDTO = new ArrayList<>();
+        userRepository.findAll().forEach(user -> {
+            var userDTO = formatUserToUserResponseDTO(user);
+            allUsersDTO.add(userDTO);
+        });
+        return allUsersDTO;
     }
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id)
+    public UserResponseDTO findById(Long id) {
+        var userToFind = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id));
+        return formatUserToUserResponseDTO(userToFind);
     }
 
     @Override
-    public User insert(User user) {
+    public UserResponseDTO insert(User user) {
         Optional<User> email = userRepository.findByEmail(user.getEmail());
         if (email.isPresent()){
             throw new BusinessException("O e-mail já está cadastrado");
@@ -44,18 +51,31 @@ public class UserServiceImpl implements UserService {
 
         var passwordEncoded = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncoded);
-        return userRepository.save(user);
+        var userToInsert = userRepository.save(user);
+        return formatUserToUserResponseDTO(userToInsert);
     }
 
     @Override
-    public User update(Long id, User user) {
+    public UserResponseDTO update(Long id, User user) {
+        Optional<User> email = userRepository.findByEmail(user.getEmail());
+        if (email.isPresent() && email.get().getId() != id){
+            throw new BusinessException("email cadastro em outro usuário.");
+        }
+
+
         User userToChange =  userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         userToChange.setCpf(user.getCpf());
         userToChange.setName(user.getName());
         userToChange.setCep(user.getCep());
         userToChange.setState(user.getState());
         userToChange.setCity(user.getCity());
-        return userRepository.save(userToChange);
+        userToChange.setAddress(user.getAddress());
+        userToChange.setAddressNumber(user.getAddressNumber());
+        userToChange.setEmail(user.getEmail());
+        var passwordEncoded = passwordEncoder.encode(user.getPassword());
+        userToChange.setPassword(passwordEncoded);
+        userRepository.save(userToChange);
+        return formatUserToUserResponseDTO(userToChange);
     }
 
     @Override
@@ -80,7 +100,6 @@ public class UserServiceImpl implements UserService {
         return userResponse;
 
     }
-
 
 
 }

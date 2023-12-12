@@ -4,8 +4,8 @@ import dev.eliezer.superticket.domain.model.Ticket;
 import dev.eliezer.superticket.dto.TicketResponseDTO;
 
 public interface TicketService {
-    Iterable<Ticket> findAll();
-    Ticket findById(Long id);
+    Iterable<TicketResponseDTO> findAll();
+    TicketResponseDTO findById(Long id);
 
     TicketResponseDTO insert(Ticket ticket);
 
