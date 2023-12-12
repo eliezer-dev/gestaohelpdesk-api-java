@@ -15,12 +15,11 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @NotBlank(message = "[cpfOrCnpj] is not provided.")
-    @Pattern(regexp = "^(\\d{11}|\\d{14})$", message = "[cpfOrCnpj] needs 11 or 14 digits and cannot contain dot or other special character.")
-    @Column(unique = true)
-    String cpfOrCnpj;
-    @NotBlank(message = "[razaoSocialOrName] is not provided.")
-    String razaoSocialOrName;
+    @NotBlank(message = "[cpf_Cnpj] is not provided.")
+    @Pattern(regexp = "^(\\d{11}|\\d{14})$", message = "[cpfCnpj] needs 11 or 14 digits and cannot contain dot or other special character.")
+    String cpfCnpj;
+    @NotBlank(message = "[razaoSocialName] is not provided.")
+    String razaoSocialName;
     @Pattern(regexp = "\\d{8}", message = "[cep] needs 11 digits and cannot contain a dash or other special characters.")
     String cep;
     @NotBlank(message = "[address] is not provided.")

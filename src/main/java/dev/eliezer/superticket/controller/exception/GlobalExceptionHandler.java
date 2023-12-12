@@ -1,5 +1,6 @@
 package dev.eliezer.superticket.controller.exception;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -56,25 +57,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    //Essa exception foi adicionada para quando ocorrer de existir um cliente com cpf/cnpj já cadastrado em outro cliente
-    //mas ela sempre ocorre quando um campo estiver marcado como unico no banco, havendo já uma ocorrência dessa informação
-    //alguém tentra gravar ela novamente.
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleConstraintViolationException(DataIntegrityViolationException e){
-        String error = "Erro ao salvar cadastro no banco de dados, nada foi alterado.";
-        e.printStackTrace();
-        System.out.println(e.getMessage());
-        System.out.println(e.getCause());
-        System.out.println(e.getRootCause());
-        System.out.println(e.getLocalizedMessage());
-        System.out.println(e.fillInStackTrace());
-
-        if (e.getMessage().contains("cpf") || e.getMessage().contains("email")){
-            String field = e.getMessage().contains("cpf") ? "cpf" : "email";
-            error = "Erro ao salvar cadastro. O " + field + " já foi usado outro cadastro.";
-        }
-        return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
 }
 
 

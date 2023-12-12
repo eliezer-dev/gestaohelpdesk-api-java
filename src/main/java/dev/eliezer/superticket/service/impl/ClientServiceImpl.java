@@ -9,6 +9,8 @@ import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ClientServiceImpl implements ClientService {
 
@@ -27,14 +29,27 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client insert(Client client) {
+        Optional<Client> clientFound = clientRepository.findByCpfCnpj(client.getCpfCnpj());
+        if(clientFound.isPresent()) {
+            clientFound = null;
+            throw new BusinessException("[cpfCnpj] " + client.getCpfCnpj() + " já foi utilizado em outro cadastro.");
+        }
+
         return clientRepository.save(client);
     }
 
     @Override
     public Client update(Long id, Client client) {
         Client clientToChange =  clientRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        clientToChange.setCpfOrCnpj(client.getCpfOrCnpj());
-        clientToChange.setRazaoSocialOrName(client.getRazaoSocialOrName());
+
+        Optional<Client> clientFound = clientRepository.findByCpfCnpj(client.getCpfCnpj());
+        if(clientFound.isPresent() && clientFound.get().getId() == id) {
+            clientFound = null;
+            throw new BusinessException("[Cpf_Cnpj] " + client.getCpfCnpj() + " já foi utilizado em outro cadastro.");
+        }
+
+        clientToChange.setCpfCnpj(client.getCpfCnpj());
+        clientToChange.setRazaoSocialName(client.getRazaoSocialName());
         clientToChange.setCep(client.getCep());
         clientToChange.setState(client.getState());
         clientToChange.setCity(client.getCity());
