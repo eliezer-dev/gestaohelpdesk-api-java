@@ -22,6 +22,7 @@ public class User {
 
     @NotBlank(message = "[cpf] is not provided.")
     @Pattern(regexp = "\\d{11}", message = "[cpf] needs 11 digits and cannot contain a dot or other special characters.")
+    @Column(unique = true)
     private String cpf;
     @Pattern(regexp = "\\d{8}", message = "[cep] needs 11 digits and cannot contain a dash or other special characters.")
     @NotBlank(message = "[cep] is not provided.")
@@ -34,8 +35,7 @@ public class User {
     private String state;
     @NotBlank(message = "[city] is not provided.")
     private String city;
-    @Email(message = "[email] invalid.")
-    //@Column(unique = true)
+    @Email(message = "[email] is invalid.")
     private String email;
     @Length(message = "[password] length must be between 8 and 100 characters")
     private String password;

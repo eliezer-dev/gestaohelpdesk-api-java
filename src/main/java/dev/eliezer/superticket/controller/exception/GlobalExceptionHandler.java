@@ -11,13 +11,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.Array;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 @RestControllerAdvice
@@ -47,7 +45,6 @@ public class GlobalExceptionHandler {
         }
 
     @ExceptionHandler(ConstraintViolationException.class)
-
     public ResponseEntity<Set> handleConstraintViolationException(ConstraintViolationException e) {
 
         Set<String> error = new HashSet<>();
@@ -58,6 +55,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    //Essa exception foi adicionada para quando ocorrer de existir um cliente com cpf/cnpj já cadastrado em outro cliente
+    //mas ela sempre ocorre quando um campo estiver marcado como unico no banco, havendo já uma ocorrência dessa informação
+    //alguém tentra gravar ela novamente.
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<String> handleConstraintViolationException(SQLIntegrityConstraintViolationException e){
+        String error = "Erro ao salvar os dados no banco de dados.";
+        e.printStackTrace();
+        if (e.getMessage().contains("CPF_OR_CNPJ") || e.getMessage().contains("CPF") ){
+            error = "CPF ou CNPJ já informado em outro cadastro.";
+        }
+        return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }
 
 
