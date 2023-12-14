@@ -33,8 +33,7 @@ public class Ticket {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
-/*    private LocalDate dateStart;
-    private LocalDate dateEnd;*/
+
 
 
 

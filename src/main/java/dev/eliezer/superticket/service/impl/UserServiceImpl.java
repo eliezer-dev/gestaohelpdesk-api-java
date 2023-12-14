@@ -4,6 +4,7 @@ import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.UserResponseDTO;
+import dev.eliezer.superticket.providers.EncryptUserPasswords;
 import dev.eliezer.superticket.service.UserService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EncryptUserPasswords encryptUserPasswords;
 
     @Override
     public Iterable<UserResponseDTO> findAll() {
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
             var userDTO = formatUserToUserResponseDTO(user);
             allUsersDTO.add(userDTO);
         });
-        return allUsersDTO;
+       return allUsersDTO;
     }
 
     @Override
