@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'dev.eliezer'
-version = '0.0.2-Final'
+version = '0.0.3-dev'
 
 java {
 	sourceCompatibility = '17'

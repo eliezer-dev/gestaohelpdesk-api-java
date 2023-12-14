@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		info = @Info(
 		title = "SuperTicket",
 		description = "API responsável por administrar chamados de atendimento.",
-		version = "0.0.2-Final"
+		version = "0.0.3-dev"
 ))
 public class Application {
 
