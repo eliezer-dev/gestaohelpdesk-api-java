@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
             var userDTO = formatUserToUserResponseDTO(user);
             allUsersDTO.add(userDTO);
         });
+
        return allUsersDTO;
     }
 
