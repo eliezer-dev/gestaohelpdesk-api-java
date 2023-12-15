@@ -2,6 +2,7 @@ package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.dto.AuthUserRequestDTO;
+import dev.eliezer.superticket.dto.AuthUserResponseDTO;
 import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.service.UserService;
 import dev.eliezer.superticket.service.impl.AuthUserServiceImpl;
@@ -31,13 +32,10 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")//annotation for Swagger
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = {
-                    @Content(
-                            array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))
-                    )
-            })
+    @ApiResponse(responseCode = "200", content = {
+            @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class)))
     })
+
     public ResponseEntity<Iterable<UserResponseDTO>> findAll(){
         var allUsers = userService.findAll();
 
@@ -46,12 +44,10 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a user by ID", description = "Retrieve a specific user based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful", content = {
-                    @Content(schema = @Schema(implementation = UserResponseDTO.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Operation successful", content = {
+            @Content(schema = @Schema(implementation = UserResponseDTO.class))})
+    @ApiResponse(responseCode = "404", description = "User not found", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id){
         var user = userService.findById(id);
@@ -60,12 +56,10 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
     @PostMapping
     @Operation(summary = "Create a new user", description = "Create a new user and return the created user's data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully",  content = {
-                    @Content(schema = @Schema(implementation = UserResponseDTO.class))
-            }),
-            @ApiResponse(responseCode = "422", description = "Invalid user data provided")
-    })
+    @ApiResponse(responseCode = "201", description = "User created successfully",  content = {
+                    @Content(schema = @Schema(implementation = UserResponseDTO.class))})
+    @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<UserResponseDTO> insert(@Valid @RequestBody User userToInsert){
         var userInserted = userService.insert(userToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -81,8 +75,10 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
             @ApiResponse(responseCode = "200", description = "User updated successfully", content = {
                     @Content(schema = @Schema(implementation = UserResponseDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "422", description = "Invalid user data provided")
+            @ApiResponse(responseCode = "404", description = "User not found", content = {
+                    @Content(schema = @Schema(implementation = Object.class))}),
+            @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = {
+                    @Content(schema = @Schema(implementation = Object.class))})
     })
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<UserResponseDTO> update(@Valid @PathVariable Long id, @RequestBody User userToUpdate){
@@ -96,10 +92,8 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a user", description = "Delete an existing user based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
+    @ApiResponse(responseCode = "204", description = "User deleted successfully")
+    @ApiResponse(responseCode = "404", description = "User not found")
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         userService.delete(id);
@@ -108,12 +102,10 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
     @PostMapping("/auth")
     @Operation(summary = "Authenticate a user", description = "Authenticate a user and generate a token")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Token generated successfully", content = {
-                    @Content(schema = @Schema(implementation = AuthUserRequestDTO.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "Unauthorized user")
-    })
+    @ApiResponse(responseCode = "200", description = "Token generated successfully", content = {
+            @Content(schema = @Schema(implementation = AuthUserResponseDTO.class))})
+    @ApiResponse(responseCode = "401", description = "Unauthorized user")
+    @Tag(name = "Auth", description = "RESTful API for managing users.")
     public ResponseEntity<Object>auth(@RequestBody AuthUserRequestDTO authUserRequestDTO){
         try {
             var token = this.authUserServiceImpl.execute(authUserRequestDTO);

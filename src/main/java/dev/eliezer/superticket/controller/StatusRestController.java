@@ -15,7 +15,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/status")
-@Tag(name = "Status Controller", description = "RESTful API for managing status registration.") //annotation for Swagger
+@Tag(name = "Status", description = "RESTful API for managing status registration.") //annotation for Swagger
 public record StatusRestController(StatusService statusService) {
     @GetMapping
     @Operation(summary = "Get all status", description = "Retrieve a list of all registered status")//annotation for Swagger

@@ -15,7 +15,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/clients")
-@Tag(name = "Clients Controller", description = "RESTful API for managing clients.")
+@Tag(name = "Clients", description = "RESTful API for managing clients.")
 public record ClientRestController(ClientService clientService) {
     @GetMapping
     @Operation(summary = "Get all clients", description = "Retrieve a list of all registered clients")

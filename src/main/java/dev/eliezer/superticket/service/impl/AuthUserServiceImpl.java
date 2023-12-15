@@ -29,12 +29,12 @@ public class AuthUserServiceImpl {
 
 
     public AuthUserResponseDTO execute(AuthUserRequestDTO authUserRequestDTO) throws AuthenticationException {
-        var user = this.userRepository.findByEmail(authUserRequestDTO.email())
+        var user = this.userRepository.findByEmail(authUserRequestDTO.getEmail())
                 .orElseThrow(() ->{
                     throw new UsernameNotFoundException("email/password incorrect");
                 });
         var passwordMatches = this.passwordEncoder
-                .matches(authUserRequestDTO.password(), user.getPassword());
+                .matches(authUserRequestDTO.getPassword(), user.getPassword());
 
         if(!passwordMatches){
             throw new AuthenticationException();
