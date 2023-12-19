@@ -1,10 +1,15 @@
 package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.Client;
+import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +21,13 @@ import java.net.URI;
 @RestController
 @RequestMapping("/clients")
 @Tag(name = "Clients", description = "RESTful API for managing clients.")
+@SecurityRequirement(name = "jwt_auth")
 public record ClientRestController(ClientService clientService) {
     @GetMapping
     @Operation(summary = "Get all clients", description = "Retrieve a list of all registered clients")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful")
-    })
+    @ApiResponse(responseCode = "200", description = "Operation successful", content = {
+            @Content(array = @ArraySchema(schema = @Schema(implementation = Client.class)))
+    }  )
     public ResponseEntity<Iterable<Client>> findAll(){
         var client = clientService.findAll();
         return ResponseEntity.ok(client);
@@ -29,10 +35,10 @@ public record ClientRestController(ClientService clientService) {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a client by ID", description = "Retrieve a specific client based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful"),
-            @ApiResponse(responseCode = "404", description = "Client not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Operation successful", content = {
+            @Content(schema = @Schema(implementation = Client.class))})
+    @ApiResponse(responseCode = "404", description = "Client not found", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Client> findById(@PathVariable Long id){
         var client = clientService.findById(id);
         return ResponseEntity.ok(client);
@@ -40,10 +46,10 @@ public record ClientRestController(ClientService clientService) {
 
     @PostMapping
     @Operation(summary = "Create a new client", description = "Create a new client and return the created client's data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Client created successfully"),
-            @ApiResponse(responseCode = "422", description = "Invalid client data provided")
-    })
+    @ApiResponse(responseCode = "201", description = "Client created successfully", content = {
+            @Content(schema = @Schema(implementation = Client.class))})
+    @ApiResponse(responseCode = "422", description = "Invalid client data provided", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Client> insert(@Valid @RequestBody Client clientToInsert){
         var clientInserted = clientService.insert(clientToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -55,11 +61,12 @@ public record ClientRestController(ClientService clientService) {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a client", description = "Update the data of an existing client based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Client updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Client not found"),
-            @ApiResponse(responseCode = "422", description = "Invalid client data provided")
-    })
+    @ApiResponse(responseCode = "200", description = "Client updated successfully", content = {
+            @Content(schema = @Schema(implementation = Client.class))})
+    @ApiResponse(responseCode = "404", description = "Client not found", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
+    @ApiResponse(responseCode = "422", description = "Invalid client data provided", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Client> update(@Valid @PathVariable Long id, @RequestBody Client clientToUpdate){
         var clientUpdated = clientService.update(id, clientToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -71,10 +78,9 @@ public record ClientRestController(ClientService clientService) {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a client", description = "Delete an existing client based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Client deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Client not found")
-    })
+    @ApiResponse(responseCode = "204", description = "Client deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Client not found")
+
     public ResponseEntity<Void> delete(@PathVariable Long id){
         clientService.delete(id);
         return ResponseEntity.noContent().build();

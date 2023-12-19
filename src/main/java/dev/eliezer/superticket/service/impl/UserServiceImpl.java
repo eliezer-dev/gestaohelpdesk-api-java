@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO update(Long id, User user) {
         Optional<User> userFound = userRepository.findByCpf(user.getCpf());
-        if(userFound.isPresent() && userFound.get().getId() == id) {
+        if(userFound.isPresent() && userFound.get().getId() != id) {
             userFound = null;
             throw new BusinessException("[cpf] " + user.getCpf() + " já foi utilizado em outro cadastro.");
         }

@@ -1,13 +1,14 @@
 package dev.eliezer.superticket.service.impl;
 
+import dev.eliezer.superticket.domain.model.Client;
+import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.domain.model.Ticket;
+import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.domain.repository.TicketRepository;
 import dev.eliezer.superticket.domain.repository.UserRepository;
-import dev.eliezer.superticket.dto.TicketResponseDTO;
-import dev.eliezer.superticket.dto.UserForTicketResponseDTO;
-import dev.eliezer.superticket.dto.UserResponseDTO;
+import dev.eliezer.superticket.dto.*;
 import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
@@ -20,7 +21,6 @@ import java.util.List;
 
 @Service
 public class TicketServiceImpl implements TicketService {
-
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -54,9 +54,9 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public TicketResponseDTO insert(Ticket ticket) {
-        ticketValidator(ticket);
-        Ticket ticketInserted = ticketRepository.save(ticket);
+    public TicketResponseDTO insert(TicketRequestDTO ticketRequestDTO) {
+        ticketValidator(ticketRequestDTO);
+        Ticket ticketInserted = ticketRepository.save(formatTicketRequestDTOForTicket(ticketRequestDTO));
         ticketInserted = ticketRepository.findById(ticketInserted.getId())
                 .orElseThrow(() -> new BusinessException("Erro ao salvar Ticket"));
 
@@ -66,10 +66,10 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public TicketResponseDTO update(Long id, Ticket ticket) {
+    public TicketResponseDTO update(Long id, TicketRequestDTO ticketRequestDTO) {
         Ticket ticketToChange =  ticketRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        ticketValidator(ticket);
-
+        ticketValidator(ticketRequestDTO);
+        Ticket ticket = formatTicketRequestDTOForTicket(ticketRequestDTO);
         ticketToChange.setClient(ticket.getClient());
         ticketToChange.setShortDescription(ticket.getShortDescription());
         ticketToChange.setDescription(ticket.getDescription());
@@ -88,23 +88,23 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.delete(ticketToDelete);
     }
 
-    private void ticketValidator(Ticket ticket){
+    private void ticketValidator(TicketRequestDTO ticketRequestDTO){
 
-        if (ticket.getUser() == null)
+        if (ticketRequestDTO.getUsers() == null)
             throw new BusinessException("User is not provided");
-        if (ticket.getClient() == null)
+        if (ticketRequestDTO.getClient() == null)
             throw new BusinessException("Client is not provided");
-        if (ticket.getStatus() == null)
+        if (ticketRequestDTO.getStatus() == null)
             throw new BusinessException("Status is not provided");
 
         //checkIfClientExists
-        if (ticket.getClient().getId() == null)
+        if (ticketRequestDTO.getClient().getId() == null)
             throw new BusinessException("Client is not provided");
-        if (!clientRepository.existsById(ticket.getClient().getId()))
-            throw new BusinessException("Client with id " + ticket.getClient().getId() + " does not exist.");
+        if (!clientRepository.existsById(ticketRequestDTO.getClient().getId()))
+            throw new BusinessException("Client with id " + ticketRequestDTO.getClient().getId() + " does not exist.");
 
         //checkifUserExists
-        ticket.getUser().forEach(user ->{
+        ticketRequestDTO.getUsers().forEach(user ->{
             if (user.getId() == null)
                 throw new BusinessException("User is not provided");
             if (!userRepository.existsById(user.getId()))
@@ -113,11 +113,11 @@ public class TicketServiceImpl implements TicketService {
         });
 
         //checkIfStatusExists
-        if (ticket.getStatus().getId() == null)
+        if (ticketRequestDTO.getStatus().getId() == null)
             throw new BusinessException("Status is not provided");
 
-        if (!statusRepository.existsById(ticket.getStatus().getId()))
-            throw new BusinessException("Status with id " + ticket.getStatus().getId() + " is not exists.");
+        if (!statusRepository.existsById(ticketRequestDTO.getStatus().getId()))
+            throw new BusinessException("Status with id " + ticketRequestDTO.getStatus().getId() + " is not exists.");
 
     }
 
@@ -131,16 +131,51 @@ public class TicketServiceImpl implements TicketService {
                     .build();
              usersResponse.add(userResponse);
         });
-
+        ClientForTicketResponseDTO clientForTicketResponseDTO = ClientForTicketResponseDTO.builder()
+                .id(ticket.getClient().getId())
+                .razaoSocialName(ticket.getClient().getRazaoSocialName())
+                .cpfCnpj(ticket.getClient().getCpfCnpj())
+                .address(ticket.getClient().getAddress())
+                .addressNumber(ticket.getClient().getAddressNumber())
+                .state(ticket.getClient().getState())
+                .city(ticket.getClient().getCity())
+                .cep(ticket.getClient().getCep())
+                .email(ticket.getClient().getEmail())
+                .build();
 
         var ticketsReponse = TicketResponseDTO.builder()
                 .id(ticket.getId())
                 .description(ticket.getDescription())
                 .shortDescription(ticket.getShortDescription())
-                .client(ticket.getClient())
+                .client(clientForTicketResponseDTO)
                 .status(ticket.getStatus())
                 .users(usersResponse)
                 .build();
         return ticketsReponse;
     }
+
+    private Ticket formatTicketRequestDTOForTicket(TicketRequestDTO ticketRequestDTO){
+        List<User> users = new ArrayList<>();
+        ticketRequestDTO.getUsers().forEach(userForTicketRequestDTO -> {
+            User user = new User();
+            user.setId(userForTicketRequestDTO.getId());
+            users.add(user);
+        });
+        Client client = new Client();
+        client.setId(ticketRequestDTO.getClient().getId());
+
+        Status status = new Status();
+        status.setId(ticketRequestDTO.getStatus().getId());
+
+        Ticket ticket = Ticket.builder()
+                .id(ticketRequestDTO.getId())
+                .shortDescription(ticketRequestDTO.getShortDescription())
+                .description(ticketRequestDTO.getDescription())
+                .user(users)
+                .client(client)
+                .status(status)
+                .build();
+        return ticket;
+    }
+
 }

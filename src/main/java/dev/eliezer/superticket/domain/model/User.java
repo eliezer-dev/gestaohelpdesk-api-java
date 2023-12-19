@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(example = "9",
+            requiredMode = Schema.RequiredMode.REQUIRED, description = "id of user")
     private Long id;
 
     @NotBlank(message = "[name] is not provided.")

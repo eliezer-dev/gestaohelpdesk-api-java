@@ -1,5 +1,6 @@
 package dev.eliezer.superticket.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,17 +16,23 @@ import java.util.List;
 
 @Data
 @Entity(name = "tb_tickets")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     @NotBlank(message = "[shortDescription] is not provided.")
+    @Schema(example = "Erro no fechamento do caixa", requiredMode = Schema.RequiredMode.REQUIRED, description = "shortdescription of ticket")
     private String shortDescription;
     @Column(nullable = false)
     @NotBlank(message = "[shortDescription] is not provided.")
+    @Schema(example = "Relatório de fechamento do caixa apresenta valores divergentes", requiredMode = Schema.RequiredMode.REQUIRED, description = "description of ticket")
     private String description;
     @ManyToOne(fetch = FetchType.EAGER)
+    @Schema(example = "{\n"+"\"id:\"1}", requiredMode = Schema.RequiredMode.REQUIRED, description = "client of ticket")
     private Client client;
 
     @ManyToMany(fetch = FetchType.EAGER)

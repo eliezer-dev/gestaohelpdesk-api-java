@@ -1,10 +1,15 @@
 package dev.eliezer.superticket.controller;
 
+import dev.eliezer.superticket.domain.model.Client;
 import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.service.StatusService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +20,14 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/status")
-@Tag(name = "Status", description = "RESTful API for managing status registration.") //annotation for Swagger
+@Tag(name = "Status", description = "RESTful API for managing status registration.")
+@SecurityRequirement(name = "jwt_auth")
 public record StatusRestController(StatusService statusService) {
     @GetMapping
     @Operation(summary = "Get all status", description = "Retrieve a list of all registered status")//annotation for Swagger
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful")
-    })
+    @ApiResponse(responseCode = "200", description = "Operation successful", content = {
+            @Content(array = @ArraySchema(schema = @Schema(implementation = Status.class)))
+    }  )
     public ResponseEntity<Iterable<Status>> findAll(){
         var status = statusService.findAll();
         return ResponseEntity.ok(status);
@@ -29,10 +35,10 @@ public record StatusRestController(StatusService statusService) {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a status by ID", description = "Retrieve a specific status based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful"),
-            @ApiResponse(responseCode = "404", description = "Status not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Operation successful", content = {
+            @Content(schema = @Schema(implementation = Status.class))})
+    @ApiResponse(responseCode = "404", description = "Status not found", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Status> findById(@PathVariable Long id){
         var status = statusService.findById(id);
         return ResponseEntity.ok(status);
@@ -40,10 +46,10 @@ public record StatusRestController(StatusService statusService) {
 
     @PostMapping
     @Operation(summary = "Create a new status", description = "Create a new status and return the created status data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Status created successfully"),
-            @ApiResponse(responseCode = "422", description = "Invalid status data provided")
-    })
+    @ApiResponse(responseCode = "201", description = "Status created successfully", content = {
+            @Content(schema = @Schema(implementation = Status.class))})
+    @ApiResponse(responseCode = "422", description = "Invalid status data provided", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Status> insert(@Valid @RequestBody Status statusToInsert) {
             var statusInserted = statusService.insert(statusToInsert);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -56,11 +62,12 @@ public record StatusRestController(StatusService statusService) {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a status", description = "Update the data of an existing status based on its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Status updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Status not found"),
-            @ApiResponse(responseCode = "422", description = "Invalid status data provided")
-    })
+    @ApiResponse(responseCode = "200", description = "Status updated successfully", content = {
+            @Content(schema = @Schema(implementation = Status.class))})
+    @ApiResponse(responseCode = "404", description = "Status not found", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
+    @ApiResponse(responseCode = "422", description = "Invalid status data provided", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Status> update(@PathVariable Long id, @RequestBody Status statusToUpdate){
         var statusUpdated = statusService.update(id, statusToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()

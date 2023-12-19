@@ -1,14 +1,10 @@
 package dev.eliezer.superticket.dto;
 
-import dev.eliezer.superticket.domain.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import java.time.LocalDateTime;
 
 @Data
@@ -16,7 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class UserResponseDTO {
-
+    @Schema(example = "1",
+            requiredMode = Schema.RequiredMode.REQUIRED, description = "id of user")
     private Long id;
     @Schema(example = "Paulo Silva", requiredMode = Schema.RequiredMode.REQUIRED, description = "name and last name of user")
     private String name;

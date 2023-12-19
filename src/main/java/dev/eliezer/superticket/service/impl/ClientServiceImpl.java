@@ -43,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
         Client clientToChange =  clientRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 
         Optional<Client> clientFound = clientRepository.findByCpfCnpj(client.getCpfCnpj());
-        if(clientFound.isPresent() && clientFound.get().getId() == id) {
+        if(clientFound.isPresent() && clientFound.get().getId() != id) {
             clientFound = null;
             throw new BusinessException("[Cpf_Cnpj] " + client.getCpfCnpj() + " já foi utilizado em outro cadastro.");
         }
