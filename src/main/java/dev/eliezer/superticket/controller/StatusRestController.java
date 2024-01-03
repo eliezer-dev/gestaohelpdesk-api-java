@@ -1,6 +1,5 @@
 package dev.eliezer.superticket.controller;
 
-import dev.eliezer.superticket.domain.model.Client;
 import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.service.StatusService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -83,9 +84,9 @@ public record StatusRestController(StatusService statusService) {
             @ApiResponse(responseCode = "204", description = "Status deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Status not found")
     })
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         statusService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("status successfully deleted");
     }
     
 }
