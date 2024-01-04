@@ -92,12 +92,12 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a user", description = "Delete an existing user based on its ID")
-    @ApiResponse(responseCode = "204", description = "User deleted successfully")
+    @ApiResponse(responseCode = "200", description = "User successfully deleted")
     @ApiResponse(responseCode = "404", description = "User not found")
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         userService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("user successfully deleted");
     }
 
     @PostMapping("/auth")

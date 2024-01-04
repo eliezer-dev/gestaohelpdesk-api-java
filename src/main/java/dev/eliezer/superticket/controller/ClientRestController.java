@@ -78,12 +78,12 @@ public record ClientRestController(ClientService clientService) {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a client", description = "Delete an existing client based on its ID")
-    @ApiResponse(responseCode = "204", description = "Client deleted successfully")
+    @ApiResponse(responseCode = "200", description = "Client successfully deleted")
     @ApiResponse(responseCode = "404", description = "Client not found")
 
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         clientService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("client successfully deleted");
     }
 
 

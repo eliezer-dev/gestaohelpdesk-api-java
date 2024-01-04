@@ -81,7 +81,7 @@ public record StatusRestController(StatusService statusService) {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a status", description = "Delete an existing status based on its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Status deleted successfully"),
+            @ApiResponse(responseCode = "200", description = "Status successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Status not found")
     })
     public ResponseEntity<String> delete(@PathVariable Long id){

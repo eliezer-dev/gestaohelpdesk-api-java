@@ -1,22 +1,14 @@
-package dev.eliezer.superticket.services;
+package dev.eliezer.superticket.controllers;
 
-import de.cronn.testutils.h2.H2Util;
-import dev.eliezer.superticket.domain.model.Status;
-import dev.eliezer.superticket.domain.repository.StatusRepository;
-import dev.eliezer.superticket.service.impl.StatusServiceImpl;
+import dev.eliezer.superticket.domain.model.Client;
+import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.domain.repository.ClientRepository;
+import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.utils.TestUtils;
-import net.minidev.json.JSONObject;
-import org.hibernate.Hibernate;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -30,28 +22,19 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Optional;
-
 import static dev.eliezer.superticket.utils.TestUtils.objectToJson;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class StatusServiceTest {
-
-    @Autowired
-    private StatusRepository statusRepository;
-
-
+public class UserControllerTest {
     private MockMvc mvc;
-
-
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Before
     public void setup(){
@@ -61,84 +44,94 @@ public class StatusServiceTest {
     }
 
     @Test
-    @DisplayName("Should be able to find status by id")
-    public void should_be_able_to_find_status_by_id()throws Exception{
-        createStatusForTest(1);
-        var result = mvc.perform(MockMvcRequestBuilders.get("/status/1")
+    @DisplayName("Should be able to find user by id")
+    public void should_be_able_to_find_user_by_id()throws Exception{
+        createUserForTest(1);
+        var result = mvc.perform(MockMvcRequestBuilders.get("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", TestUtils.generateToken(1L
                                 , "SUPERTICKET@2024")))
                 .andExpectAll(MockMvcResultMatchers.status().isOk(),
                         MockMvcResultMatchers.content().contentType("application/json"));
-        statusRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("Should be able to get all status")
-    public void should_be_able_to_get_all_status()throws Exception{
-        String jsonString = "[{\"id\":1,\"description\":\"open\"},{\"id\":2,\"description\":\"open\"},{\"id\":3,\"description\":\"open\"}]";
-        createStatusForTest(3);
-        var result = mvc.perform(MockMvcRequestBuilders.get("/status")
+    @DisplayName("Should be able to get all users")
+    public void should_be_able_to_get_all_users()throws Exception{
+        var result = mvc.perform(MockMvcRequestBuilders.get("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", TestUtils.generateToken(1L
                                 , "SUPERTICKET@2024")))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(jsonString));
-        statusRepository.deleteAll();
+                .andExpectAll(MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.content().contentType("application/json"));
+
     }
 
     @Test
-    @DisplayName("Should be able to create a new status")
-    public void should_be_able_to_create_a_new_status()throws Exception{
-        Status status = new Status();
-        status.setDescription("open");
-        var result = mvc.perform(MockMvcRequestBuilders.post("/status")
+    @DisplayName("Should be able to create a new users")
+    public void should_be_able_to_create_a_new_users()throws Exception{
+        User user = returnUserModel();
+        var result = mvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectToJson(status))
+                        .content(objectToJson(user))
                         .header("Authorization", TestUtils.generateToken(1L
                                 , "SUPERTICKET@2024")))
                 .andExpectAll(MockMvcResultMatchers.status().isCreated(),
                         MockMvcResultMatchers.content().contentType("application/json"));
-        statusRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("Should be able to update a status")
-    public void should_be_able_to_update_a_status()throws Exception{
-        createStatusForTest(1);
-        Status newStatus = new Status();
-        newStatus.setDescription("closed");
+    @DisplayName("Should be able to update a user")
+    public void should_be_able_to_update_a_user()throws Exception{
+        createUserForTest(1);
+        User user = returnUserModel();
+        user.setId(1L);
+        user.setName("TESTENAME2");
 
-        var result = mvc.perform(MockMvcRequestBuilders.put("/status/1")
+        var result = mvc.perform(MockMvcRequestBuilders.put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectToJson(newStatus))
+                        .content(objectToJson(user))
                         .header("Authorization", TestUtils.generateToken(1L
                                 , "SUPERTICKET@2024")))
                 .andExpectAll(MockMvcResultMatchers.status().isCreated(),
                         MockMvcResultMatchers.content().contentType("application/json"));
-        statusRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("Should be able to delete a status")
-    public void should_be_able_to_delete_a_status()throws Exception{
-        createStatusForTest(1);
+    @DisplayName("Should be able to delete a user")
+    public void should_be_able_to_delete_a_user()throws Exception{
+        createUserForTest(1);
 
-        var result = mvc.perform(MockMvcRequestBuilders.delete("/status/1")
+        var result = mvc.perform(MockMvcRequestBuilders.delete("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", TestUtils.generateToken(1L
                                 , "SUPERTICKET@2024")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    public void createStatusForTest (int ntimes) {
+    public void createUserForTest (int ntimes) {
         while (ntimes > 0){
-            Status statusOld = new Status();
-            statusOld.setDescription("open");
-            statusRepository.save(statusOld);
+            User user = returnUserModel();
+            user.setCpf("1234567890" + ntimes);
+            user.setEmail("teste"+ntimes+"@testeemail.com");
+            userRepository.save(user);
             ntimes--;
         }
 
+    }
+
+    public User returnUserModel (){
+        User user = new User();
+        user.setName("TESTENAME");
+        user.setCpf("12345678901");
+        user.setCep("13346000");
+        user.setCity("TESTECIDADE");
+        user.setState("TESTEESTADO");
+        user.setAddress("TESTE ENDERECO");
+        user.setAddressNumber("TESTENUMERO");
+        user.setEmail("teste@testeemail.com");
+        user.setPassword("teste1234");
+        return user;
     }
 
 }

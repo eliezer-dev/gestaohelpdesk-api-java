@@ -81,12 +81,12 @@ public record TicketRestController(TicketService ticketService) {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a ticket", description = "Delete an existing ticket based on its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Ticket deleted successfully"),
+            @ApiResponse(responseCode = "200", description = "Ticket successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Ticket not found")
     })
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         ticketService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("ticket successfully deleted");
     }
 
 }
