@@ -2,11 +2,17 @@ package dev.eliezer.superticket.dto;
 
 import dev.eliezer.superticket.domain.model.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TicketRequestDTO {
     @Schema(example = "9",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "id of ticket")
@@ -19,5 +25,5 @@ public class TicketRequestDTO {
     private String description;
     private ClientForTicketRequestDTO client;
     private List<UserForTicketRequestDTO> users;
-    private Status status;
+    private StatusForTicketRequestDTO status;
 }

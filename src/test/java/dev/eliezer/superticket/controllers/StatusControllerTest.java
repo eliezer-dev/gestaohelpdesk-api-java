@@ -21,6 +21,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static dev.eliezer.superticket.utils.TestUtils.objectToJson;
 
 
@@ -114,13 +117,15 @@ public class StatusControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    public void createStatusForTest (int ntimes) {
+    public List<Status> createStatusForTest (int ntimes) {
+        List<Status> statusList = new ArrayList<>();
         while (ntimes > 0){
             Status status = returnStatusModel();
             statusRepository.save(status);
             ntimes--;
+            statusList.add(status);
         }
-
+        return statusList;
     }
 
     public Status returnStatusModel (){

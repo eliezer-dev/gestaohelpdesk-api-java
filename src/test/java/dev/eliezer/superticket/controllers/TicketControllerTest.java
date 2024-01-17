@@ -8,6 +8,10 @@ import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.domain.repository.TicketRepository;
 import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.dto.ClientForTicketRequestDTO;
+import dev.eliezer.superticket.dto.StatusForTicketRequestDTO;
+import dev.eliezer.superticket.dto.TicketRequestDTO;
+import dev.eliezer.superticket.dto.UserForTicketRequestDTO;
 import dev.eliezer.superticket.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,12 +56,6 @@ public class TicketControllerTest {
     @Autowired
     private StatusRepository statusRepository;
 
-    private UserControllerTest userControllerTest = new UserControllerTest();
-
-    private ClientControllerTest clientControllerTest = new ClientControllerTest();
-
-    private StatusControllerTest statusControllerTest = new StatusControllerTest();
-
     @Before
     public void setup() {
         mvc = MockMvcBuilders.webAppContextSetup(context)
@@ -66,21 +64,9 @@ public class TicketControllerTest {
     }
 
     @Test
-    @DisplayName("Should be able to find ticket by id")
-    public void should_be_able_to_find_ticket_by_id() throws Exception {
-        Ticket ticket = returnTicketModel();
-        ticketRepository.save(ticket);
-        var result = mvc.perform(MockMvcRequestBuilders.get("/tickets/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", TestUtils.generateToken(1L
-                                , "SUPERTICKET@2024")))
-                .andExpectAll(MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.content().contentType("application/json"));
-    }
-
-    @Test
     @DisplayName("Should be able to get all tickets")
     public void should_be_able_to_get_all_tickets()throws Exception{
+        createTicketForTest(3);
         var result = mvc.perform(MockMvcRequestBuilders.get("/tickets")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", TestUtils.generateToken(1L
@@ -89,77 +75,164 @@ public class TicketControllerTest {
                         MockMvcResultMatchers.content().contentType("application/json"));
 
     }
-//
-//    @Test
-//    @DisplayName("Should be able to create a new users")
-//    public void should_be_able_to_create_a_new_users()throws Exception{
-//        User user = returnUserModel();
-//        var result = mvc.perform(MockMvcRequestBuilders.post("/users")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectToJson(user))
-//                        .header("Authorization", TestUtils.generateToken(1L
-//                                , "SUPERTICKET@2024")))
-//                .andExpectAll(MockMvcResultMatchers.status().isCreated(),
-//                        MockMvcResultMatchers.content().contentType("application/json"));
-//    }
-//
-//    @Test
-//    @DisplayName("Should be able to update a user")
-//    public void should_be_able_to_update_a_user()throws Exception{
-//        createUserForTest(1);
-//        User user = returnUserModel();
-//        user.setId(1L);
-//        user.setName("TESTENAME2");
-//
-//        var result = mvc.perform(MockMvcRequestBuilders.put("/users/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectToJson(user))
-//                        .header("Authorization", TestUtils.generateToken(1L
-//                                , "SUPERTICKET@2024")))
-//                .andExpectAll(MockMvcResultMatchers.status().isCreated(),
-//                        MockMvcResultMatchers.content().contentType("application/json"));
-//    }
-//
-//    @Test
-//    @DisplayName("Should be able to delete a user")
-//    public void should_be_able_to_delete_a_user()throws Exception{
-//        createUserForTest(1);
-//
-//        var result = mvc.perform(MockMvcRequestBuilders.delete("/users/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", TestUtils.generateToken(1L
-//                                , "SUPERTICKET@2024")))
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//    }
-//
 
-    public List<User> createUserForTest(int ntimes) {
+
+    @Test
+    @DisplayName("Should be able to find ticket by id")
+    public void should_be_able_to_find_ticket_by_id() throws Exception {
+        createTicketForTest(1);
+        var result = mvc.perform(MockMvcRequestBuilders.get("/tickets/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", TestUtils.generateToken(1L
+                                , "SUPERTICKET@2024")))
+                .andExpectAll(MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.content().contentType("application/json"));
+    }
+
+
+
+    @Test
+    @DisplayName("Should be able to update a ticket")
+    public void should_be_able_to_update_a_user()throws Exception{
+        var tickets = createTicketForTest(1);
+        tickets.get(0).setShortDescription("TESTE COM SHORT DESCRIPTION ALTERADA");
+
+        ClientForTicketRequestDTO client = ClientForTicketRequestDTO.builder()
+                .id(tickets.get(0).getClient().getId())
+                .build();
+
+        List<UserForTicketRequestDTO> users = new ArrayList<>();
+                tickets.get(0).getUser().forEach(user -> {
+                    UserForTicketRequestDTO userForTicketRequestDTO = UserForTicketRequestDTO.builder()
+                            .id(user.getId())
+                            .build();
+                    users.add(userForTicketRequestDTO);
+                });
+
+        StatusForTicketRequestDTO status = StatusForTicketRequestDTO.builder()
+                .id(tickets.get(0).getStatus().getId())
+                .build();
+        TicketRequestDTO ticketRequestFormated = TicketRequestDTO.builder()
+                .id(tickets.get(0).getId())
+                .shortDescription("TESTE SHORTDESCRIPTION ALTERADA")
+                .description("TESTE DESCRIPTION ALTERADA")
+                .client(client)
+                .users(users)
+                .status(status)
+                .build();
+
+
+        var result = mvc.perform(MockMvcRequestBuilders.put("/tickets/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectToJson(ticketRequestFormated))
+                        .header("Authorization", TestUtils.generateToken(1L
+                                , "SUPERTICKET@2024")))
+                .andExpectAll(MockMvcResultMatchers.status().isCreated(),
+                        MockMvcResultMatchers.content().contentType("application/json"));
+
+    }
+
+    @Test
+    @DisplayName("Should be able to delete a ticket")
+    public void should_be_able_to_delete_a_ticket()throws Exception{
+        createTicketForTest(1);
+
+        var result = mvc.perform(MockMvcRequestBuilders.delete("/tickets/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", TestUtils.generateToken(1L
+                                , "SUPERTICKET@2024")))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    public List<Client> createClientForTest (int ntimes) {
+        List<Client> clients = new ArrayList<>();
+
+        while (ntimes > 0){
+            Client client = new Client();
+            client.setRazaoSocialName("TESTENAME");
+            client.setCpfCnpj("1234567890123" + ntimes);
+            client.setCep("13346000");
+            client.setCity("TESTECIDADE");
+            client.setState("TESTEESTADO");
+            client.setAddress("TESTE ENDERECO");
+            client.setAddressNumber("TESTENUMERO");
+            client.setEmail("teste@testeemail.com");
+
+            clientRepository.save(client);
+
+            ntimes--;
+
+            clients.add(client);
+        }
+        return clients;
+}
+
+
+    public List<User> createUserForTest (int ntimes) {
         List<User> users = new ArrayList<>();
         while (ntimes > 0){
-            User user = userControllerTest.returnUserModel();
+            User user = new User();
+            user.setName("TESTENAME");
             user.setCpf("1234567890" + ntimes);
+            user.setCep("13346000");
+            user.setCity("TESTECIDADE");
+            user.setState("TESTEESTADO");
+            user.setAddress("TESTE ENDERECO");
+            user.setAddressNumber("TESTENUMERO");
             user.setEmail("teste"+ntimes+"@testeemail.com");
+            user.setPassword("teste1234");
+
             userRepository.save(user);
+
             ntimes--;
+
             users.add(user);
         }
         return users;
     }
 
+    public List<Status> createStatusForTest (int ntimes) {
+        List<Status> statusList = new ArrayList<>();
+        while (ntimes > 0){
+            Status status = new Status();
+            status.setDescription("open" + " " + ntimes);
 
-    public Ticket returnTicketModel () {
+            statusRepository.save(status);
+
+            ntimes--;
+
+            statusList.add(status);
+        }
+        return statusList;
+    }
+
+    public List<Ticket> createTicketForTest (int ntimes) {
+        List<Client> clients = createClientForTest(ntimes);
+        List <User> users = createUserForTest(ntimes);
+        List<Status> status = createStatusForTest(ntimes);
+        List<Ticket> tickets = new ArrayList<>();
+        while (ntimes > 0)  {
+            Ticket ticket = returnTicketModel(clients.get(ntimes-1), users.get(ntimes-1), status.get(ntimes-1));
+            ticket.setShortDescription(ticket.getShortDescription() + " " + ntimes);
+            ticket.setShortDescription(ticket.getDescription() + " " + ntimes);
+            ticket = ticketRepository.save(ticket);
+            ntimes --;
+            tickets.add(ticket);
+        }
+        return tickets;
+    }
+
+
+    public Ticket returnTicketModel (Client client, User user, Status status) {
+        List<User> users = new ArrayList<>();
+        users.add(user);
         Ticket ticket = new Ticket();
-        Client client = clientControllerTest.returnClientModel();
-        clientRepository.save(client);
-        Status status = statusControllerTest.returnStatusModel();
-        statusRepository.save(status);
         ticket.setShortDescription("TESTE SHORT DESCRIPTION");
         ticket.setDescription("TESTE DESCRIPTION");
         ticket.setClient(client);
-        ticket.setUser(createUserForTest(1));
+        ticket.setUser(users);
         ticket.setStatus(status);
         return ticket;
-        /*precisa criar os usuarios, clientes e status antes de criar o ticket*/
 
     }
 }

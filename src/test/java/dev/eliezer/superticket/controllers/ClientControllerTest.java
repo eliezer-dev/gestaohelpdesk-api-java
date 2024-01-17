@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,6 +20,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static dev.eliezer.superticket.utils.TestUtils.objectToJson;
 
@@ -32,7 +36,7 @@ public class ClientControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
+
     private ClientRepository clientRepository;
 
     @Before
@@ -109,15 +113,17 @@ public class ClientControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    public void createClientForTest (int ntimes) {
+    public List<Client> createClientForTest (int ntimes) {
+        List<Client> clients = new ArrayList<>();
 
         while (ntimes > 0){
             Client client = returnClientModel();
             client.setCpfCnpj("1234567890123" + ntimes);
             clientRepository.save(client);
             ntimes--;
+            clients.add(client);
         }
-
+        return clients;
     }
 
     public Client returnClientModel (){

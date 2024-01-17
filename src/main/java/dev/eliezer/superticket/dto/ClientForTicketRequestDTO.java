@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientForTicketRequestDTO {
         @Schema(example = "1",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "id of client")
