@@ -110,6 +110,7 @@ public class ClientControllerTest {
     }
 
     public void createClientForTest (int ntimes) {
+
         while (ntimes > 0){
             Client client = returnClientModel();
             client.setCpfCnpj("1234567890123" + ntimes);

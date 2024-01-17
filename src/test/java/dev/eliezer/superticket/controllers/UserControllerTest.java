@@ -1,8 +1,6 @@
 package dev.eliezer.superticket.controllers;
 
-import dev.eliezer.superticket.domain.model.Client;
 import dev.eliezer.superticket.domain.model.User;
-import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.utils.TestUtils;
 import org.junit.Before;
@@ -21,6 +19,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static dev.eliezer.superticket.utils.TestUtils.objectToJson;
 
@@ -57,7 +58,9 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Should be able to get all users")
+
     public void should_be_able_to_get_all_users()throws Exception{
+        createUserForTest(3);
         var result = mvc.perform(MockMvcRequestBuilders.get("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", TestUtils.generateToken(1L
@@ -109,15 +112,17 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    public void createUserForTest (int ntimes) {
+    public List<User> createUserForTest (int ntimes) {
+        List<User> users = new ArrayList<>();
         while (ntimes > 0){
             User user = returnUserModel();
             user.setCpf("1234567890" + ntimes);
             user.setEmail("teste"+ntimes+"@testeemail.com");
             userRepository.save(user);
             ntimes--;
+            users.add(user);
         }
-
+        return users;
     }
 
     public User returnUserModel (){

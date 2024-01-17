@@ -1,6 +1,7 @@
 package dev.eliezer.superticket.controllers;
 
 import dev.eliezer.superticket.domain.model.Status;
+import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.utils.TestUtils;
 import org.junit.Before;
@@ -115,12 +116,17 @@ public class StatusControllerTest {
 
     public void createStatusForTest (int ntimes) {
         while (ntimes > 0){
-            Status status = new Status();
-            status.setDescription("open");
+            Status status = returnStatusModel();
             statusRepository.save(status);
             ntimes--;
         }
 
+    }
+
+    public Status returnStatusModel (){
+        Status status = new Status();
+        status.setDescription("open");
+        return status;
     }
 
 }
