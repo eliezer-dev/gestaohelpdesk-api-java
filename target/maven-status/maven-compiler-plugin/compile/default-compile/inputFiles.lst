@@ -34,6 +34,7 @@ C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\controller\Cl
 C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\domain\repository\ClientRepository.java
 C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\service\impl\ClientServiceImpl.java
 C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\dto\ClientForTicketResponseDTO.java
+C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\controller\SystemRestController.java
 C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\security\SecurityConfig.java
 C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\service\ClientService.java
 C:\code\projetos\superticket\src\main\java\dev\eliezer\superticket\dto\TicketRequestDTO.java

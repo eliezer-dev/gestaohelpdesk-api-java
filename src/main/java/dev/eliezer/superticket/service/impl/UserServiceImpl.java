@@ -25,9 +25,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EncryptUserPasswords encryptUserPasswords;
-
     @Override
     public Iterable<UserResponseDTO> findAll() {
         List<UserResponseDTO> allUsersDTO = new ArrayList<>();

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.eliezer</groupId>
-    <artifactId>superticket</artifactId>
-    <version>0.0.3-dev</version>
-    <name>SuperTicket</name>
-    <description>Software para gestão de chamados de atendimento</description>
+    <artifactId>gestao-helpdesk</artifactId>
+    <version>0.0.4-dev</version>
+    <name>Gestao Heldesk</name>
+    <description>Software para gestão de chamados de atendimento heldesk</description>
     <properties>
         <java.version>17</java.version>
     </properties>

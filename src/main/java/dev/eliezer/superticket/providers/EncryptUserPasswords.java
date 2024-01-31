@@ -20,4 +20,5 @@ public class EncryptUserPasswords {
             userRepository.save(user);
         });
     }
+
 }
