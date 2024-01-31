@@ -32,6 +32,9 @@ public class UserServiceImpl implements UserService {
     public Iterable<UserResponseDTO> findAll() {
         List<UserResponseDTO> allUsersDTO = new ArrayList<>();
         userRepository.findAll().forEach(user -> {
+//            var passwordEncoded = passwordEncoder.encode(user.getPassword());
+//            user.setPassword(passwordEncoded);
+//            userRepository.save(user);
             var userDTO = formatUserToUserResponseDTO(user);
             allUsersDTO.add(userDTO);
         });

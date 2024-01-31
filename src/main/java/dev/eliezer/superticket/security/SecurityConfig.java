@@ -30,13 +30,13 @@ public class SecurityConfig {
                     auth
                             .requestMatchers("/users").permitAll()
                             .requestMatchers("/users/auth").permitAll()
-                            .requestMatchers(SWAGGER_LIST).permitAll();
+                            .requestMatchers(SWAGGER_LIST).permitAll()
+                            .requestMatchers("/system/status").permitAll();
 
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
-
-        return http.build();
+                return http.build();
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
