@@ -11,4 +11,5 @@ public class AuthUserRequestDTO {
     private String email;
     @Schema(example = "senha@1234", requiredMode = Schema.RequiredMode.REQUIRED, description = "password of user", minLength = 8, maxLength = 30)
     private String password;
+
 }

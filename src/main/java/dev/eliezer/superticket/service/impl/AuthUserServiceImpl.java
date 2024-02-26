@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.AuthUserRequestDTO;
 import dev.eliezer.superticket.dto.AuthUserResponseDTO;
+import dev.eliezer.superticket.dto.UserForAuthResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,13 +32,13 @@ public class AuthUserServiceImpl {
     public AuthUserResponseDTO execute(AuthUserRequestDTO authUserRequestDTO) throws AuthenticationException {
         var user = this.userRepository.findByEmail(authUserRequestDTO.getEmail())
                 .orElseThrow(() ->{
-                    throw new UsernameNotFoundException("email/password incorrect");
+                    throw new UsernameNotFoundException("Usuário/e-mail ou senha incorretos");
                 });
         var passwordMatches = this.passwordEncoder
                 .matches(authUserRequestDTO.getPassword(), user.getPassword());
 
         if(!passwordMatches){
-            throw new AuthenticationException();
+            throw new AuthenticationException("Usuário/e-mail ou senha incorretos");
         }
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -50,6 +51,10 @@ public class AuthUserServiceImpl {
                 .sign(algorithm);
 
         var authUserResponse = AuthUserResponseDTO.builder()
+                .user(UserForAuthResponseDTO.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .build())
                 .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();

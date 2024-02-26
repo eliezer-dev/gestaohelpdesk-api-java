@@ -25,7 +25,7 @@ public class SecurityUserFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
 //        if (request.getRequestURI().startsWith("/candidate")){
-            if(header != null){
+            if(header != null && header != ""){
                 var token = this.jwtUserProvider.validateToken(header);
                 if (token == null){
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

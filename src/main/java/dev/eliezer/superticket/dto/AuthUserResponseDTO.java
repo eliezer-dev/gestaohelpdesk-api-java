@@ -15,4 +15,5 @@ public class AuthUserResponseDTO {
     private String access_token;
     @Schema(example = "1702666369728")
     private Long expires_in;
+    private UserForAuthResponseDTO user;
 }
