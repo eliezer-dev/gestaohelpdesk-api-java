@@ -27,6 +27,7 @@ public class SecurityUserFilter extends OncePerRequestFilter {
 //        if (request.getRequestURI().startsWith("/candidate")){
             if(header != null && header != ""){
                 var token = this.jwtUserProvider.validateToken(header);
+                var user = this.jwtUserProvider.validateToken(header).getSubject();
                 if (token == null){
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
@@ -41,13 +42,10 @@ public class SecurityUserFilter extends OncePerRequestFilter {
                         null,
                         Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(auth);
+                request.setAttribute("user_id",auth.getPrincipal());
             }
 
-
-//        }
         filterChain.doFilter(request,response);
-
-
     }
 }
 

@@ -15,11 +15,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -29,7 +31,6 @@ import java.util.List;
 @RequestMapping("/users")
 @Tag(name = "Users", description = "RESTful API for managing users.")
 public record UserRestController (UserService userService, AuthUserServiceImpl authUserServiceImpl){
-
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")//annotation for Swagger
@@ -82,7 +83,8 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
                     @Content(schema = @Schema(implementation = Object.class))})
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<UserResponseDTO> update(@Valid @PathVariable Long id, @RequestBody UserForUpdateRequestDTO userUpdate){
+    public ResponseEntity<UserResponseDTO> update(@Valid HttpServletRequest request, @RequestBody UserForUpdateRequestDTO userUpdate){
+        Long id = Long.valueOf(request.getAttribute("user_id").toString());
         var userUpdated = userService.update(id, userUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
