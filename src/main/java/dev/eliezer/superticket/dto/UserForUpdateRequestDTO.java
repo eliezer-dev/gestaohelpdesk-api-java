@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class UserForAuthResponseDTO {
+public class UserForUpdateRequestDTO {
     @Schema(example = "1", description = "user id")
     private Long id;
 
@@ -35,4 +35,11 @@ public class UserForAuthResponseDTO {
 
     @Schema(example = "paulo@gmail.com", description = "email of user")
     private String email;
+
+    @Schema(example = "password12345", description = "current password")
+    private String oldPassword;
+
+    @Schema(example = "12345password", description = "new password")
+    private String newPassword;
+
 }

@@ -3,6 +3,7 @@ package dev.eliezer.superticket.service.impl;
 import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.dto.UserForUpdateRequestDTO;
 import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.providers.EncryptUserPasswords;
 import dev.eliezer.superticket.service.UserService;
@@ -66,28 +67,47 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO update(Long id, User user) {
-        Optional<User> userFound = userRepository.findByCpf(user.getCpf());
+    public UserResponseDTO update(Long id, UserForUpdateRequestDTO userUpdate) {
+        Optional<User> userFound = userRepository.findByCpf(userUpdate.getCpf());
         if(userFound.isPresent() && userFound.get().getId() != id) {
             userFound = null;
-            throw new BusinessException("[cpf] " + user.getCpf() + " já foi utilizado em outro cadastro.");
+            throw new BusinessException("[cpf] " + userUpdate.getCpf() + " já foi utilizado em outro cadastro.");
         }
 
-        userFound = userRepository.findByEmail(user.getEmail());
+        userFound = userRepository.findByEmail(userUpdate.getEmail());
+
         if(userFound.isPresent() && userFound.get().getId() != id) {
-            throw new BusinessException("[email] " + user.getEmail() + " já foi utilizado em outro cadastro.");
+            throw new BusinessException("[email] " + userUpdate.getEmail() + " já foi utilizado em outro cadastro.");
         }
 
         User userToChange =  userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        userToChange.setCpf(user.getCpf());
-        userToChange.setName(user.getName());
-        userToChange.setCep(user.getCep());
-        userToChange.setState(user.getState());
-        userToChange.setCity(user.getCity());
-        userToChange.setAddress(user.getAddress());
-        userToChange.setAddressNumber(user.getAddressNumber());
-        userToChange.setEmail(user.getEmail());
-        var passwordEncoded = passwordEncoder.encode(user.getPassword());
+        userToChange.setCpf(userUpdate.getCpf());
+        userToChange.setName(userUpdate.getName());
+        userToChange.setCep(userUpdate.getCep());
+        userToChange.setState(userUpdate.getState());
+        userToChange.setCity(userUpdate.getCity());
+        userToChange.setAddress(userUpdate.getAddress());
+        userToChange.setAddressNumber(userUpdate.getAddressNumber());
+        userToChange.setEmail(userUpdate.getEmail());
+
+        if (userUpdate.getNewPassword() == null){
+            userToChange.setPassword(userToChange.getPassword());
+            userRepository.save(userToChange);
+            return formatUserToUserResponseDTO(userToChange);
+        }
+
+        if (userUpdate.getOldPassword() == null) {
+            throw new BusinessException("Senha atual não informada.");
+        }
+
+        var passwordMatches = this.passwordEncoder
+                .matches(userUpdate.getOldPassword(), userToChange.getPassword());
+
+        if (!passwordMatches){
+            throw new BusinessException("Usuário ou senha incorretos.");
+        }
+
+        var passwordEncoded = passwordEncoder.encode(userUpdate.getNewPassword());
         userToChange.setPassword(passwordEncoded);
         userRepository.save(userToChange);
         return formatUserToUserResponseDTO(userToChange);

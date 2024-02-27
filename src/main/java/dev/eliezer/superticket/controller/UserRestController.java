@@ -3,6 +3,7 @@ package dev.eliezer.superticket.controller;
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.dto.AuthUserRequestDTO;
 import dev.eliezer.superticket.dto.AuthUserResponseDTO;
+import dev.eliezer.superticket.dto.UserForUpdateRequestDTO;
 import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.service.UserService;
 import dev.eliezer.superticket.service.impl.AuthUserServiceImpl;
@@ -81,8 +82,8 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
                     @Content(schema = @Schema(implementation = Object.class))})
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<UserResponseDTO> update(@Valid @PathVariable Long id, @RequestBody User userToUpdate){
-        var userUpdated = userService.update(id, userToUpdate);
+    public ResponseEntity<UserResponseDTO> update(@Valid @PathVariable Long id, @RequestBody UserForUpdateRequestDTO userUpdate){
+        var userUpdated = userService.update(id, userUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(userUpdated.getId())
