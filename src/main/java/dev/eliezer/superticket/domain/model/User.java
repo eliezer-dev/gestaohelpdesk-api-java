@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
@@ -58,8 +59,13 @@ public class User {
     @Schema(example = "senha@1234", requiredMode = Schema.RequiredMode.REQUIRED, description = "password of user", minLength = 8, maxLength = 30)
     private String password;
 
+    @Schema(example = "ABCDEFG12345-minhafoto.jpg", description = "avatar do usuário")
+    private String avatar;
+
     @CreationTimestamp
     private LocalDateTime createAt;
 
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 
 }
