@@ -61,6 +61,7 @@ public class AuthUserServiceImpl {
                         .addressNumber(user.getAddressNumber())
                         .state(user.getState())
                         .city(user.getCity())
+                        .avatar(user.getAvatar())
                         .build())
                 .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())

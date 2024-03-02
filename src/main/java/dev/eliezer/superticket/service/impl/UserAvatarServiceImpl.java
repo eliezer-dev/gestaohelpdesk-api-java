@@ -3,19 +3,17 @@ package dev.eliezer.superticket.service.impl;
 import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.service.exception.NotFoundException;
-import org.apache.commons.lang3.RandomUtils;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static dev.eliezer.superticket.config.Upload.UPLOAD_FOLDER;
+import static dev.eliezer.superticket.providers.DiskStorage.getFiles;
+import static dev.eliezer.superticket.providers.DiskStorage.saveFiles;
 
 @Service
 public class UserAvatarServiceImpl {
@@ -29,43 +27,29 @@ public class UserAvatarServiceImpl {
                 .orElseThrow(() -> new NotFoundException(id));
 
         try {
-            byte[] bytes = file.getBytes();
-            byte[] hash = RandomUtils.nextBytes(20);
-            String filename = hash + "-" + file.getOriginalFilename();
-            Path path = Paths.get(UPLOAD_FOLDER + filename);
-            userToChange.setAvatar(filename);
-            Files.write(path, bytes);
+            String filenameSaved = saveFiles(file);
 
+            if (filenameSaved != "" || filenameSaved != null) {
+                userToChange.setAvatar(filenameSaved);
+            }
+            return userRepository.save(userToChange);
         }catch (IOException e) {
             e.printStackTrace();
-            throw new IOException("Não foi possível salvar o arquivo");
+            throw new IOException("Não foi possível salvar a imagem");
         }
-
-        return userRepository.save(userToChange);
 
     }
 
-    public ByteArrayResource getAvatar(Long id) throws IOException {
-        var user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(id));
-
+    public String getAvatar (Long id) throws IOException {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         try {
-            String filename = user.getAvatar();
-
-            var file = new File(UPLOAD_FOLDER + filename);
-
-            var path = Paths.get(file.getAbsolutePath());
-
-            return new ByteArrayResource(Files.readAllBytes(path));
-
-        }catch (IOException e) {
+            return getFiles(user.getAvatar());
+        }catch (IOException e ) {
             e.printStackTrace();
-            throw new IOException("Não foi possível carregar o arquivo do usuário.");
-
+            throw  new IOException("Não foi possível carregar a imagem.");
         }
 
     }
-
 }
 
 

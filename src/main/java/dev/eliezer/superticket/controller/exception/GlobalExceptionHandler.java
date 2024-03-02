@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,6 +36,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNoContentException(NotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleNoContentException(IOException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
 

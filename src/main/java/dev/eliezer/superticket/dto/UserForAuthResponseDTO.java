@@ -35,4 +35,7 @@ public class UserForAuthResponseDTO {
 
     @Schema(example = "paulo@gmail.com", description = "email of user")
     private String email;
+
+    @Schema(example = "", description = "avatar of user")
+    private String avatar;
 }
