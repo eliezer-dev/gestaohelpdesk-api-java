@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -26,4 +27,5 @@ public class TicketResponseDTO {
     private ClientForTicketResponseDTO client;
     private List<UserForTicketResponseDTO> users;
     private Status status;
+    private LocalDateTime createAt;
 }

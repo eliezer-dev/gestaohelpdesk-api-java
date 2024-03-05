@@ -150,6 +150,7 @@ public class TicketServiceImpl implements TicketService {
                 .client(clientForTicketResponseDTO)
                 .status(ticket.getStatus())
                 .users(usersResponse)
+                .createAt(ticket.getCreateAt())
                 .build();
         return ticketsReponse;
     }
