@@ -35,13 +35,37 @@ public class TicketServiceImpl implements TicketService {
     private UserServiceImpl userService;
 
     @Override
-    public Iterable<TicketResponseDTO> findAll() {
+    public TicketResponseForIndexDTO index(Long userId) {
         List<TicketResponseDTO> allTickets = new ArrayList<>();
+        final List<TicketResponseDTO> ticketsAssignedUser = new ArrayList<>();
+        final List<TicketResponseDTO> ticketsNotAssignedUser = new ArrayList<>();
+        TicketResponseForIndexDTO ticketResponseForIndexDTO;
         ticketRepository.findAll().forEach(ticket -> {
             var ticketDTO = formatTicketToTicketResponseDTO(ticket);
             allTickets.add(ticketDTO);
         });
-        return allTickets;
+
+        allTickets.stream().forEach((ticket) -> {
+            ticket.getUsers().stream().forEach((user) -> {
+                if (user.getId().equals(userId)) {
+                    ticketsAssignedUser.add(ticket);
+                }
+            });
+        });
+
+        allTickets.stream().forEach((ticket) -> {
+            if(ticket.getUsers().isEmpty()) {
+                ticketsNotAssignedUser.add(ticket);
+            }
+
+        });
+        ticketResponseForIndexDTO = TicketResponseForIndexDTO.builder()
+                .allTickets(allTickets)
+                .ticketsNotAssigned(ticketsNotAssignedUser)
+                .ticketsAssignedUser(ticketsAssignedUser)
+                .build();
+
+        return ticketResponseForIndexDTO;
     }
 
     @Override
@@ -49,6 +73,7 @@ public class TicketServiceImpl implements TicketService {
         var ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id));
         var ticketResponseDTO = formatTicketToTicketResponseDTO(ticket);
+
         return ticketResponseDTO;
     }
 

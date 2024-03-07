@@ -3,6 +3,7 @@ package dev.eliezer.superticket.controller;
 import dev.eliezer.superticket.domain.model.Ticket;
 import dev.eliezer.superticket.dto.TicketRequestDTO;
 import dev.eliezer.superticket.dto.TicketResponseDTO;
+import dev.eliezer.superticket.dto.TicketResponseForIndexDTO;
 import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,9 @@ public record TicketRestController(TicketService ticketService) {
     @Operation(summary = "Get all tickets", description = "Retrieve a list of all registered tickets")//annotation for Swagger
     @ApiResponse(responseCode = "200", description = "Operation successful", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = TicketResponseDTO.class)))})
-    public ResponseEntity<Iterable<TicketResponseDTO>> findAll(){
-        var ticket = ticketService.findAll();
+    public ResponseEntity<TicketResponseForIndexDTO> findAll(HttpServletRequest request){
+        Long userId = Long.valueOf(request.getAttribute("user_id").toString());
+        var ticket = ticketService.index(userId);
         return ResponseEntity.ok(ticket);
     }
 
