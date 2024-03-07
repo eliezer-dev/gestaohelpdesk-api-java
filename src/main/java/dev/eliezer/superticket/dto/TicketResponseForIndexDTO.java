@@ -17,4 +17,6 @@ public class TicketResponseForIndexDTO {
     private List<TicketResponseDTO> ticketsAssignedUser;
 
     private List<TicketResponseDTO> ticketsNotAssigned;
+
+    private List<TicketResponseDTO> ticketsAssignedOtherUsers;
 }

@@ -39,6 +39,7 @@ public class TicketServiceImpl implements TicketService {
         List<TicketResponseDTO> allTickets = new ArrayList<>();
         final List<TicketResponseDTO> ticketsAssignedUser = new ArrayList<>();
         final List<TicketResponseDTO> ticketsNotAssignedUser = new ArrayList<>();
+        final List<TicketResponseDTO> ticketsAssignedOtherUsers = new ArrayList<>();
         TicketResponseForIndexDTO ticketResponseForIndexDTO;
         ticketRepository.findAll().forEach(ticket -> {
             var ticketDTO = formatTicketToTicketResponseDTO(ticket);
@@ -53,16 +54,25 @@ public class TicketServiceImpl implements TicketService {
             });
         });
 
+
         allTickets.stream().forEach((ticket) -> {
             if(ticket.getUsers().isEmpty()) {
                 ticketsNotAssignedUser.add(ticket);
             }
 
         });
+
+        List<TicketResponseDTO> compareList = new ArrayList<>();
+        compareList.addAll(ticketsAssignedUser);
+        compareList.addAll(ticketsNotAssignedUser);
+        ticketsAssignedOtherUsers.addAll(allTickets);
+        ticketsAssignedOtherUsers.removeAll(compareList);
+
         ticketResponseForIndexDTO = TicketResponseForIndexDTO.builder()
                 .allTickets(allTickets)
                 .ticketsNotAssigned(ticketsNotAssignedUser)
                 .ticketsAssignedUser(ticketsAssignedUser)
+                .ticketsAssignedOtherUsers(ticketsAssignedOtherUsers)
                 .build();
 
         return ticketResponseForIndexDTO;
