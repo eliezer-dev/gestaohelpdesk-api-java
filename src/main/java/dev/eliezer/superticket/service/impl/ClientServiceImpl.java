@@ -1,7 +1,6 @@
 package dev.eliezer.superticket.service.impl;
 
 import dev.eliezer.superticket.domain.model.Client;
-import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.service.ClientService;
 import dev.eliezer.superticket.service.exception.BusinessException;
@@ -18,9 +17,16 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
 
     @Override
-    public Iterable<Client> findAll() {
-        return clientRepository.findAll();
+    public Iterable<Client> index(String search) {
+        if (search.isEmpty()) {
+            return clientRepository.findAll();
+        }else {
+            System.out.println(search);
+            return clientRepository.findByRazaoSocialNameIgnoreCaseContaining(search);
+        }
+
     }
+
 
     @Override
     public Client findById(Long id) {

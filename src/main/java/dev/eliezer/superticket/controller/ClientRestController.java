@@ -28,10 +28,21 @@ public record ClientRestController(ClientService clientService) {
     @ApiResponse(responseCode = "200", description = "Operation successful", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = Client.class)))
     }  )
-    public ResponseEntity<Iterable<Client>> findAll(){
-        var client = clientService.findAll();
+    public ResponseEntity<Iterable<Client>> index(@RequestParam(value="search", defaultValue="") String search) {
+        var client = clientService.index(search);
         return ResponseEntity.ok(client);
+
     }
+//    @GetMapping
+//    @Operation(summary = "Get all clients", description = "Retrieve a list of all registered clients")
+//    @ApiResponse(responseCode = "200", description = "Operation successful", content = {
+//            @Content(array = @ArraySchema(schema = @Schema(implementation = Client.class)))
+//    }  )
+//    public ResponseEntity<Iterable<Client>> index(@RequestParam("search") String search){
+//        var client = clientService.index(search);
+//        return ResponseEntity.ok(client);
+//    }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a client by ID", description = "Retrieve a specific client based on its ID")

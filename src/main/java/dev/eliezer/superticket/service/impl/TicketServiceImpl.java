@@ -62,6 +62,7 @@ public class TicketServiceImpl implements TicketService {
 
         });
 
+        //garante que em ticketsAssignedOtherUsers só tenha os tickets que estão atribuidos a outros usuarios
         List<TicketResponseDTO> compareList = new ArrayList<>();
         compareList.addAll(ticketsAssignedUser);
         compareList.addAll(ticketsNotAssignedUser);
