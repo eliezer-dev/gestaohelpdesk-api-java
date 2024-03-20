@@ -3,7 +3,9 @@ package dev.eliezer.superticket.service;
 import dev.eliezer.superticket.domain.model.Client;
 
 public interface ClientService {
-    Iterable<Client> findAll();
+
+    Iterable<Client> index(String search);
+
     Client findById(Long id);
 
     Client insert(Client client);

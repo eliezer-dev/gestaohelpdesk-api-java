@@ -21,5 +21,16 @@ public class Status {
     @Schema(example = "Em Andamento",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "status of ticket")
     String description;
+    @Schema(example = "1",
+            requiredMode = Schema.RequiredMode.REQUIRED, description = """
+            type of status:
+            1:  standard.
+            2: done.
+            3: closed.
+            4: pending.
+            5: canceled.
+            """)
+    Long type;
+
 
 }
