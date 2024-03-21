@@ -43,6 +43,13 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
 
+    @Schema(example = "1", description =
+            """
+            1 - internal.
+            2 - external.
+            """)
+    Long typeOfService;
+
     @CreationTimestamp
     private LocalDateTime createAt;
 

@@ -111,6 +111,7 @@ public class TicketServiceImpl implements TicketService {
         ticketToChange.setDescription(ticket.getDescription());
         ticketToChange.setStatus(ticket.getStatus());
         ticketToChange.setUser(ticket.getUser());
+        ticketToChange.setTypeOfService(ticket.getTypeOfService());
         ticketRepository.save(ticketToChange);
         ticketToChange = ticketRepository.findById(id).orElseThrow(() -> new BusinessException("Erro ao salvar o ticket."));
         var ticketResponse = formatTicketToTicketResponseDTO(ticketToChange);
@@ -155,6 +156,8 @@ public class TicketServiceImpl implements TicketService {
         if (!statusRepository.existsById(ticketRequestDTO.getStatus().getId()))
             throw new BusinessException("Status with id " + ticketRequestDTO.getStatus().getId() + " is not exists.");
 
+        if (ticketRequestDTO.getTypeOfService() == null)
+            throw new BusinessException("Type Of Service is not provided");
     }
 
     private TicketResponseDTO formatTicketToTicketResponseDTO(Ticket ticket){
@@ -186,6 +189,7 @@ public class TicketServiceImpl implements TicketService {
                 .client(clientForTicketResponseDTO)
                 .status(ticket.getStatus())
                 .users(usersResponse)
+                .typeOfService(ticket.getTypeOfService())
                 .createAt(ticket.getCreateAt())
                 .build();
         return ticketsReponse;
@@ -211,6 +215,7 @@ public class TicketServiceImpl implements TicketService {
                 .user(users)
                 .client(client)
                 .status(status)
+                .typeOfService(ticketRequestDTO.getTypeOfService())
                 .build();
         return ticket;
     }

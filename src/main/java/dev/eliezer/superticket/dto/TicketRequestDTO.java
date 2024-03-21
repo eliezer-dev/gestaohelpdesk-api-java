@@ -26,4 +26,5 @@ public class TicketRequestDTO {
     private ClientForTicketRequestDTO client;
     private List<UserForTicketRequestDTO> users;
     private StatusForTicketRequestDTO status;
+    private Long typeOfService;
 }
