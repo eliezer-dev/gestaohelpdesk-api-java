@@ -15,6 +15,8 @@ import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +94,9 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketResponseDTO insert(TicketRequestDTO ticketRequestDTO) {
         ticketValidator(ticketRequestDTO);
-        Ticket ticketInserted = ticketRepository.save(formatTicketRequestDTOForTicket(ticketRequestDTO));
+        Ticket ticketInserted = formatTicketRequestDTOForTicket(ticketRequestDTO);
+
+        ticketRepository.save(ticketInserted);
         ticketInserted = ticketRepository.findById(ticketInserted.getId())
                 .orElseThrow(() -> new BusinessException("Erro ao salvar Ticket"));
 
@@ -112,6 +116,7 @@ public class TicketServiceImpl implements TicketService {
         ticketToChange.setStatus(ticket.getStatus());
         ticketToChange.setUser(ticket.getUser());
         ticketToChange.setTypeOfService(ticket.getTypeOfService());
+        ticketToChange.setScheduledDateTime(ticket.getScheduledDateTime());
         ticketRepository.save(ticketToChange);
         ticketToChange = ticketRepository.findById(id).orElseThrow(() -> new BusinessException("Erro ao salvar o ticket."));
         var ticketResponse = formatTicketToTicketResponseDTO(ticketToChange);
@@ -190,6 +195,7 @@ public class TicketServiceImpl implements TicketService {
                 .status(ticket.getStatus())
                 .users(usersResponse)
                 .typeOfService(ticket.getTypeOfService())
+                .scheduledDateTime(ticket.getScheduledDateTime())
                 .createAt(ticket.getCreateAt())
                 .build();
         return ticketsReponse;
@@ -207,7 +213,7 @@ public class TicketServiceImpl implements TicketService {
 
         Status status = new Status();
         status.setId(ticketRequestDTO.getStatus().getId());
-
+        System.out.println(LocalDateTime.now());
         Ticket ticket = Ticket.builder()
                 .id(ticketRequestDTO.getId())
                 .shortDescription(ticketRequestDTO.getShortDescription())
@@ -216,6 +222,10 @@ public class TicketServiceImpl implements TicketService {
                 .client(client)
                 .status(status)
                 .typeOfService(ticketRequestDTO.getTypeOfService())
+//                .scheduledDateTime(LocalDateTime
+//                        .parse(ticketRequestDTO.getScheduledDateTime(),
+//                                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .scheduledDateTime(ticketRequestDTO.getScheduledDateTime())
                 .build();
         return ticket;
     }

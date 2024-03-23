@@ -28,5 +28,6 @@ public class TicketResponseDTO {
     private List<UserForTicketResponseDTO> users;
     private Status status;
     private Long typeOfService;
+    private LocalDateTime scheduledDateTime;
     private LocalDateTime createAt;
 }
