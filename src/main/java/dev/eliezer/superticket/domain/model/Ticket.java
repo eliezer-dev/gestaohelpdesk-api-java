@@ -25,14 +25,17 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     @NotBlank(message = "[shortDescription] is not provided.")
     @Schema(example = "Erro no fechamento do caixa", requiredMode = Schema.RequiredMode.REQUIRED, description = "shortdescription of ticket")
     private String shortDescription;
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 1000)
     @NotBlank(message = "[shortDescription] is not provided.")
     @Schema(example = "Relatório de fechamento do caixa apresenta valores divergentes", requiredMode = Schema.RequiredMode.REQUIRED, description = "description of ticket")
     private String description;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @Schema(example = "{\n"+"\"id:\"1}", requiredMode = Schema.RequiredMode.REQUIRED, description = "client of ticket")
     private Client client;
@@ -51,7 +54,11 @@ public class Ticket {
             """)
     Long typeOfService;
 
+    @Schema(example = "2024-03-25T10:30:00", description ="sheduled date and time of ticket")
     private LocalDateTime scheduledDateTime;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Category category;
 
     @CreationTimestamp
     private LocalDateTime createAt;

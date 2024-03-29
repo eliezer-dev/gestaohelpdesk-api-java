@@ -21,7 +21,6 @@ public class ClientServiceImpl implements ClientService {
         if (search.isEmpty()) {
             return clientRepository.findAll();
         }else {
-            System.out.println(search);
             return clientRepository.findByRazaoSocialNameIgnoreCaseContaining(search);
         }
 
