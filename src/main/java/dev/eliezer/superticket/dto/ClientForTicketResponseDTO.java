@@ -18,6 +18,8 @@ public class ClientForTicketResponseDTO {
     String cpfCnpj;
     @Schema(example = "Emporio Juca e Rosa Me", requiredMode = Schema.RequiredMode.REQUIRED, description = "company name or name of client")
     String razaoSocialName;
+    @Schema(example = "Emporio Juca", description = "business name or name of client")
+    String businessName;
     @Schema(example = "87654321", requiredMode = Schema.RequiredMode.REQUIRED, description = "zip code of client")
     String cep;
     @Schema(example = "Rua Rio de Janeiro", requiredMode = Schema.RequiredMode.REQUIRED, description = "address of client")

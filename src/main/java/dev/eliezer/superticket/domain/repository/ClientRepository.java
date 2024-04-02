@@ -8,6 +8,10 @@ import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    Optional<Client> findByCpfCnpj(String cpfCnpj);
+    Optional<Client> findByCpfCnpj(String search);
     Iterable<Client> findByRazaoSocialNameIgnoreCaseContaining(String search);
+    Iterable<Client> findByBusinessNameIgnoreCaseContaining(String search);
+    Iterable<Client> findByEmailIgnoreCaseContaining(String search);
+    Iterable<Client> findByCityIgnoreCaseContaining(String search);
+    Iterable<Client> findByAddressIgnoreCaseContaining(String search);
 }

@@ -178,6 +178,7 @@ public class TicketServiceImpl implements TicketService {
         ClientForTicketResponseDTO clientForTicketResponseDTO = ClientForTicketResponseDTO.builder()
                 .id(ticket.getClient().getId())
                 .razaoSocialName(ticket.getClient().getRazaoSocialName())
+                .businessName(ticket.getClient().getBusinessName())
                 .cpfCnpj(ticket.getClient().getCpfCnpj())
                 .address(ticket.getClient().getAddress())
                 .addressNumber(ticket.getClient().getAddressNumber())

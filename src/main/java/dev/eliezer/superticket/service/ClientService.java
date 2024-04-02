@@ -4,7 +4,7 @@ import dev.eliezer.superticket.domain.model.Client;
 
 public interface ClientService {
 
-    Iterable<Client> index(String search);
+    Object index(String search, Long typeSearch);
 
     Client findById(Long id);
 

@@ -1,14 +1,12 @@
 package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.domain.model.Client;
-import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,8 +26,9 @@ public record ClientRestController(ClientService clientService) {
     @ApiResponse(responseCode = "200", description = "Operation successful", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = Client.class)))
     }  )
-    public ResponseEntity<Iterable<Client>> index(@RequestParam(value="search", defaultValue="") String search) {
-        var client = clientService.index(search);
+    public ResponseEntity<Object> index(@RequestParam(value="search", defaultValue="") String search,
+                                        @RequestParam(value="type", defaultValue="") Long type ) {
+        var client = clientService.index(search, type);
         return ResponseEntity.ok(client);
 
     }

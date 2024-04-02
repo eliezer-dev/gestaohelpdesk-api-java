@@ -8,6 +8,9 @@ import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,12 +20,37 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
 
     @Override
-    public Iterable<Client> index(String search) {
+    public Object index(String search, Long typeSearch) {
         if (search.isEmpty()) {
             return clientRepository.findAll();
+
         }else {
-            return clientRepository.findByRazaoSocialNameIgnoreCaseContaining(search);
+            if (typeSearch == 1) {
+                return clientRepository.findByRazaoSocialNameIgnoreCaseContaining(search);
+            }
+            if (typeSearch == 2) {
+                return clientRepository.findByBusinessNameIgnoreCaseContaining(search);
+            }
+            if (typeSearch == 3) {
+                List clientList = new ArrayList();
+                Optional<Client> client = clientRepository.findByCpfCnpj(search);
+                if (client.isPresent()) {
+                    clientList.add(client);
+                }
+
+                return clientList;
+            }
+            if (typeSearch == 4) {
+                return clientRepository.findByEmailIgnoreCaseContaining(search);
+            }
+            if (typeSearch == 5) {
+                return clientRepository.findByCityIgnoreCaseContaining(search);
+            }
+            if (typeSearch == 6) {
+                return clientRepository.findByAddressIgnoreCaseContaining(search);
+            }
         }
+        return clientRepository.findAll();
 
     }
 
@@ -58,6 +86,7 @@ public class ClientServiceImpl implements ClientService {
         clientToChange.setCep(client.getCep());
         clientToChange.setState(client.getState());
         clientToChange.setCity(client.getCity());
+        clientToChange.setBusinessName(client.getBusinessName());
         return clientRepository.save(clientToChange);
     }
 
