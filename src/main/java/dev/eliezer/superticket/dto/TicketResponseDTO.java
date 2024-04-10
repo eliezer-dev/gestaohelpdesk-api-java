@@ -1,5 +1,6 @@
 package dev.eliezer.superticket.dto;
 
+import dev.eliezer.superticket.domain.model.Category;
 import dev.eliezer.superticket.domain.model.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class TicketResponseDTO {
     private List<UserForTicketResponseDTO> users;
     private Status status;
     private Long typeOfService;
+    private Category category;
     private LocalDateTime scheduledDateTime;
     private LocalDateTime createAt;
 }

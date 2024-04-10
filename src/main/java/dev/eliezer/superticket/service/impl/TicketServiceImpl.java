@@ -1,9 +1,6 @@
 package dev.eliezer.superticket.service.impl;
 
-import dev.eliezer.superticket.domain.model.Client;
-import dev.eliezer.superticket.domain.model.Status;
-import dev.eliezer.superticket.domain.model.Ticket;
-import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.domain.model.*;
 import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.domain.repository.TicketRepository;
@@ -117,6 +114,7 @@ public class TicketServiceImpl implements TicketService {
         ticketToChange.setUser(ticket.getUser());
         ticketToChange.setTypeOfService(ticket.getTypeOfService());
         ticketToChange.setScheduledDateTime(ticket.getScheduledDateTime());
+        ticketToChange.setCategory(ticket.getCategory());
         ticketRepository.save(ticketToChange);
         ticketToChange = ticketRepository.findById(id).orElseThrow(() -> new BusinessException("Erro ao salvar o ticket."));
         var ticketResponse = formatTicketToTicketResponseDTO(ticketToChange);
@@ -163,6 +161,9 @@ public class TicketServiceImpl implements TicketService {
 
         if (ticketRequestDTO.getTypeOfService() == null)
             throw new BusinessException("Type Of Service is not provided");
+
+        if (ticketRequestDTO.getCategory() == null)
+            throw new BusinessException("Category is not provided");
     }
 
     private TicketResponseDTO formatTicketToTicketResponseDTO(Ticket ticket){
@@ -196,6 +197,7 @@ public class TicketServiceImpl implements TicketService {
                 .status(ticket.getStatus())
                 .users(usersResponse)
                 .typeOfService(ticket.getTypeOfService())
+                .category(ticket.getCategory())
                 .scheduledDateTime(ticket.getScheduledDateTime())
                 .createAt(ticket.getCreateAt())
                 .build();
@@ -214,7 +216,10 @@ public class TicketServiceImpl implements TicketService {
 
         Status status = new Status();
         status.setId(ticketRequestDTO.getStatus().getId());
-        System.out.println(LocalDateTime.now());
+
+        Category category = new Category();
+        category.setId(ticketRequestDTO.getCategory().getId());
+
         Ticket ticket = Ticket.builder()
                 .id(ticketRequestDTO.getId())
                 .shortDescription(ticketRequestDTO.getShortDescription())
@@ -227,6 +232,7 @@ public class TicketServiceImpl implements TicketService {
 //                        .parse(ticketRequestDTO.getScheduledDateTime(),
 //                                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .scheduledDateTime(ticketRequestDTO.getScheduledDateTime())
+                .category(category)
                 .build();
         return ticket;
     }

@@ -28,5 +28,6 @@ public class TicketRequestDTO {
     private List<UserForTicketRequestDTO> users;
     private StatusForTicketRequestDTO status;
     private Long typeOfService;
+    private CategoryForTicketRequestDTO category;
     private LocalDateTime scheduledDateTime;
 }
