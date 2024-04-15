@@ -27,20 +27,20 @@ import static dev.eliezer.superticket.config.Upload.UPLOAD_FOLDER;
 @Tag(name = "Avatar", description = "RESTful API for managing users avatars.")
 public record UserAvatarRestController(UserAvatarServiceImpl userAvatarService) {
 
-    @PutMapping
+    @PutMapping("/{id}")
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> update(@Valid @RequestParam("avatar") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException, AuthenticationException {
-        Long id = Long.valueOf(request.getAttribute("user_id").toString());
+    public ResponseEntity<Object> update(@Valid @PathVariable Long id, @RequestParam("avatar") MultipartFile file ) throws IOException, AuthenticationException {
+        //Long id = Long.valueOf(request.getAttribute("user_id").toString());
         var userUpdated = userAvatarService.update(id, file);
         return ResponseEntity.ok().body(userUpdated);
 
     }
 
-    @GetMapping()
+    @GetMapping("/{id}")
     @SecurityRequirement(name = "jwt_auth")
     @ResponseBody
-    public ResponseEntity<String> getAvatar(@Valid HttpServletRequest request ) throws IOException, AuthenticationException {
-        Long id = Long.valueOf(request.getAttribute("user_id").toString());
+    public ResponseEntity<String> getAvatar(@Valid @PathVariable Long id) throws IOException, AuthenticationException {
+        //Long id = Long.valueOf(request.getAttribute("user_id").toString());
         String avatar = userAvatarService.getAvatar(id);
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(avatar);

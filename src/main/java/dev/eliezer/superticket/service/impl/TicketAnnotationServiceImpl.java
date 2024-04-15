@@ -9,14 +9,18 @@ import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.TicketAnnotationRequestDTO;
 import dev.eliezer.superticket.dto.TicketAnnotationResponseDTO;
 import dev.eliezer.superticket.dto.TicketRequestDTO;
+import dev.eliezer.superticket.dto.UserForTicketResponseDTO;
 import dev.eliezer.superticket.service.TicketAnnotationService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static dev.eliezer.superticket.providers.DiskStorage.getFiles;
 
 @Service
 public class TicketAnnotationServiceImpl implements TicketAnnotationService {
@@ -103,11 +107,29 @@ public class TicketAnnotationServiceImpl implements TicketAnnotationService {
     }
 
     private TicketAnnotationResponseDTO formatTicketAnnotationForTicketAnnotationResponseDTO(TicketAnnotation ticketAnnotation) {
+        var user = userRepository.findById(ticketAnnotation.getUser().getId()).orElseThrow(() -> new NotFoundException(ticketAnnotation.getId()));
+        String avatar = null;
+        if (!(user.getAvatar() == null)) {
+            try {
+                avatar = getFiles(user.getAvatar());
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new BusinessException("Não foi possível carregar a imagem.");
+            }
+        }
+       
+        UserForTicketResponseDTO userForTicketResponseDTO = new UserForTicketResponseDTO();
+        userForTicketResponseDTO.setId(user.getId());
+        userForTicketResponseDTO.setName(user.getName());
+        userForTicketResponseDTO.setAvatar(avatar);
+
         TicketAnnotationResponseDTO ticketAnnotationResponseDTO = TicketAnnotationResponseDTO.builder()
                 .id(ticketAnnotation.getId())
                 .ticketId(ticketAnnotation.getTicket().getId())
-                .userId(ticketAnnotation.getUser().getId())
+                .user(userForTicketResponseDTO)
                 .description(ticketAnnotation.getDescription())
+                .createAt(ticketAnnotation.getCreateAt())
+                .updateAt(ticketAnnotation.getUpdateAt())
                 .build();
         return ticketAnnotationResponseDTO;
     }

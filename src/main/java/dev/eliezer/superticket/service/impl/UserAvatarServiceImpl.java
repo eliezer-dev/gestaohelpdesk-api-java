@@ -42,13 +42,16 @@ public class UserAvatarServiceImpl {
 
     public String getAvatar (Long id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        try {
-            return getFiles(user.getAvatar());
-        }catch (IOException e ) {
-            e.printStackTrace();
-            throw  new IOException("Não foi possível carregar a imagem.");
+        String avatar = null;
+        if (!(user.getAvatar() == null)) {
+            try {
+                avatar = getFiles(user.getAvatar());
+            }catch (IOException e ) {
+                e.printStackTrace();
+                throw  new IOException("Não foi possível carregar a imagem.");
+            }
         }
-
+        return avatar;
     }
 }
 

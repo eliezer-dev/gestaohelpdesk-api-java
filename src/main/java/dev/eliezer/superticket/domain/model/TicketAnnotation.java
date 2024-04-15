@@ -30,8 +30,10 @@ public class TicketAnnotation {
     private User user;
 
     @CreationTimestamp
+    @Schema(example = "2024-03-25T10:30:00", description ="date and time the ticket annotation was created")
     private LocalDateTime createAt;
 
     @UpdateTimestamp
+    @Schema(example = "2024-03-25T10:30:00", description ="date and time the ticket annotation was updated")
     private LocalDateTime updateAt;
 }

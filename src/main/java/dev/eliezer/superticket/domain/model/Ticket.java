@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,7 +62,12 @@ public class Ticket {
     private Category category;
 
     @CreationTimestamp
+    @Schema(example = "2024-03-25T10:30:00", description ="date and time the ticket was created")
     private LocalDateTime createAt;
+
+    @UpdateTimestamp
+    @Schema(example = "2024-03-25T10:30:00", description ="date and time the ticket was updated")
+    private LocalDateTime updateAt;
 
 
 
