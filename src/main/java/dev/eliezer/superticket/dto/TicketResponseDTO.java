@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -32,4 +33,6 @@ public class TicketResponseDTO {
     private Category category;
     private LocalDateTime scheduledDateTime;
     private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+    private LocalDateTime slaDateTimeEnd;
 }

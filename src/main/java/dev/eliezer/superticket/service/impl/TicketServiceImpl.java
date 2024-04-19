@@ -12,10 +12,14 @@ import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 
 @Service
@@ -187,7 +191,13 @@ public class TicketServiceImpl implements TicketService {
                 .city(ticket.getClient().getCity())
                 .cep(ticket.getClient().getCep())
                 .email(ticket.getClient().getEmail())
+                .slaDefault(ticket.getClient().getSlaDefault())
+                .slaUrgency(ticket.getClient().getSlaUrgency())
                 .build();
+
+        Duration slaInHours = Duration.ofHours(ticket.getCategory().getPriority() == 0 ? ticket.getClient().getSlaDefault() :
+                ticket.getClient().getSlaUrgency());
+        LocalDateTime slaDateTimeEnd = ticket.getCreateAt().plus(slaInHours);
 
         var ticketsReponse = TicketResponseDTO.builder()
                 .id(ticket.getId())
@@ -200,6 +210,8 @@ public class TicketServiceImpl implements TicketService {
                 .category(ticket.getCategory())
                 .scheduledDateTime(ticket.getScheduledDateTime())
                 .createAt(ticket.getCreateAt())
+                .updateAt(!(ticket.getUpdateAt() == null) ? ticket.getUpdateAt() : ticket.getCreateAt())
+                .slaDateTimeEnd(slaDateTimeEnd)
                 .build();
         return ticketsReponse;
     }

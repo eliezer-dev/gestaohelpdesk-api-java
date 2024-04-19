@@ -56,6 +56,16 @@ public class Client {
     @Schema(example = "contato@emporiojucarosa.com.br", description = "email of client")
     String email;
 
+
+
+    @NotBlank(message = "[slaDefault] is not provided.")
+    @Schema(example = "24", requiredMode = Schema.RequiredMode.REQUIRED, description = "time in hours of the sla contract in default cases")
+    Long slaDefault;
+
+    @NotBlank(message = "[slaUrgency] is not provided.")
+    @Schema(example = "4", requiredMode = Schema.RequiredMode.REQUIRED, description = "time in hours of the sla contract in urgent cases")
+    Long slaUrgency;
+
     @CreationTimestamp
     private LocalDateTime createAt;
 

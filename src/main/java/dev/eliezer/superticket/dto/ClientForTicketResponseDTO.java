@@ -1,6 +1,7 @@
 package dev.eliezer.superticket.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,4 +33,10 @@ public class ClientForTicketResponseDTO {
     String city;
     @Schema(example = "contato@emporiojucarosa.com.br", description = "email of client")
     String email;
+
+    @Schema(example = "4", requiredMode = Schema.RequiredMode.REQUIRED, description = "time in hours of the sla contract in default cases")
+    Long slaDefault;
+
+    @Schema(example = "4", requiredMode = Schema.RequiredMode.REQUIRED, description = "time in hours of the sla contract in urgent cases")
+    Long slaUrgency;
 }

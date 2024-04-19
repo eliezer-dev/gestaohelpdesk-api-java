@@ -20,7 +20,8 @@ public class Category {
     @Column(nullable = false)
     String description;
 
-    @Schema(example = "1",
+    @Schema(example = "0 - default priority" +
+            "1 - urgency priority",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "priority of category")
     @NotNull(message = "[priority] is not provided.")
     @Column(nullable = false)
