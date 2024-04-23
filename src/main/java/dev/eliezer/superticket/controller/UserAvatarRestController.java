@@ -22,6 +22,7 @@ import java.util.Base64;
 
 import static dev.eliezer.superticket.config.Upload.UPLOAD_FOLDER;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/users/avatar")
 @Tag(name = "Avatar", description = "RESTful API for managing users avatars.")

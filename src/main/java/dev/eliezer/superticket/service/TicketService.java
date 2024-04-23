@@ -1,12 +1,18 @@
 package dev.eliezer.superticket.service;
 
 import dev.eliezer.superticket.domain.model.Ticket;
+import dev.eliezer.superticket.dto.TicketCountResponseDTO;
 import dev.eliezer.superticket.dto.TicketRequestDTO;
 import dev.eliezer.superticket.dto.TicketResponseDTO;
 import dev.eliezer.superticket.dto.TicketResponseForIndexDTO;
 
+import java.util.List;
+
 public interface TicketService {
-    TicketResponseForIndexDTO index(Long userId);
+    List<TicketResponseDTO> index(Long userId, Long type);
+
+    TicketCountResponseDTO getTicketsCount(Long userId);
+
     TicketResponseDTO findById(Long id);
 
     TicketResponseDTO insert(TicketRequestDTO ticketRequestDTO);

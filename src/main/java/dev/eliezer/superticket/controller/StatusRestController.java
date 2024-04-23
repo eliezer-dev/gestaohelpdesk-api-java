@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/status")
 @Tag(name = "Status", description = "RESTful API for managing status registration.")

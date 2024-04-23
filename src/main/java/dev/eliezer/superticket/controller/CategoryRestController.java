@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/categories")
 @Tag(name = "Categories", description = "RESTful API for managing categories.")

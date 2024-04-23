@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/tickets/annotations")
 @Tag(name = "Annotations of Tickets", description = "RESTful API for managing annotation of tickets.")

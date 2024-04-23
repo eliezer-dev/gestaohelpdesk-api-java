@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/clients")
 @Tag(name = "Clients", description = "RESTful API for managing clients.")

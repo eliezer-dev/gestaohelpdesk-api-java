@@ -27,7 +27,7 @@ public class TicketResponseDTO {
             requiredMode = Schema.RequiredMode.REQUIRED, description = "description of ticket")
     private String description;
     private ClientForTicketResponseDTO client;
-    private List<UserForTicketResponseDTO> users;
+    private UserForTicketResponseDTO user;
     private Status status;
     private Long typeOfService;
     private Category category;

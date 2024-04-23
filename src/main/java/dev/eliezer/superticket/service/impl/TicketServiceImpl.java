@@ -13,13 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.time.temporal.ChronoUnit.MINUTES;
 
 
 @Service
@@ -37,49 +32,41 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private UserServiceImpl userService;
 
-    @Override
-    public TicketResponseForIndexDTO index(Long userId) {
-        List<TicketResponseDTO> allTickets = new ArrayList<>();
-        final List<TicketResponseDTO> ticketsAssignedUser = new ArrayList<>();
-        final List<TicketResponseDTO> ticketsNotAssignedUser = new ArrayList<>();
-        final List<TicketResponseDTO> ticketsAssignedOtherUsers = new ArrayList<>();
-        TicketResponseForIndexDTO ticketResponseForIndexDTO;
-        ticketRepository.findAll().forEach(ticket -> {
+    public List<TicketResponseDTO> index(Long userId, Long type) {
+        List<TicketResponseDTO> ticketsList = new ArrayList<>();
+
+        if (userId == 0 && type == 0) {
+            ticketRepository.findAll().forEach(ticket -> {
             var ticketDTO = formatTicketToTicketResponseDTO(ticket);
-            allTickets.add(ticketDTO);
-        });
-
-        allTickets.stream().forEach((ticket) -> {
-            ticket.getUsers().stream().forEach((user) -> {
-                if (user.getId().equals(userId)) {
-                    ticketsAssignedUser.add(ticket);
-                }
+            ticketsList.add(ticketDTO);
             });
-        });
-
-
-        allTickets.stream().forEach((ticket) -> {
-            if(ticket.getUsers().isEmpty()) {
-                ticketsNotAssignedUser.add(ticket);
+            return ticketsList;
+        }else if (userId != 0 && type == 0) {
+            ticketRepository.findByUserId(userId).forEach(ticket -> {
+                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                ticketsList.add(ticketDTO);
+            });
+            return ticketsList;
+        }else if (type == 1) {
+            if (userId == 0) {
+                throw new BusinessException("user id is not provided");
             }
+            ticketRepository.findByNotUserId(userId).forEach(ticket -> {
+                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                ticketsList.add(ticketDTO);
+            });
+            return ticketsList;
+        }else if (type == 2) {
+            ticketRepository.findTicketsWithoutUser().forEach(ticket -> {
+                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                ticketsList.add(ticketDTO);
+            });
+            return ticketsList;
 
-        });
+        }else {
+            throw new BusinessException("invalid option.");
+        }
 
-        //garante que em ticketsAssignedOtherUsers só tenha os tickets que estão atribuidos a outros usuarios
-        List<TicketResponseDTO> compareList = new ArrayList<>();
-        compareList.addAll(ticketsAssignedUser);
-        compareList.addAll(ticketsNotAssignedUser);
-        ticketsAssignedOtherUsers.addAll(allTickets);
-        ticketsAssignedOtherUsers.removeAll(compareList);
-
-        ticketResponseForIndexDTO = TicketResponseForIndexDTO.builder()
-                .allTickets(allTickets)
-                .ticketsNotAssigned(ticketsNotAssignedUser)
-                .ticketsAssignedUser(ticketsAssignedUser)
-                .ticketsAssignedOtherUsers(ticketsAssignedOtherUsers)
-                .build();
-
-        return ticketResponseForIndexDTO;
     }
 
     @Override
@@ -88,6 +75,21 @@ public class TicketServiceImpl implements TicketService {
                 .orElseThrow(() -> new NotFoundException(id));
         var ticketResponseDTO = formatTicketToTicketResponseDTO(ticket);
 
+        return ticketResponseDTO;
+    }
+
+    @Override
+    public TicketCountResponseDTO getTicketsCount(Long userId) {
+        Long allTicketsCount = (long) ticketRepository.findAll().size();
+        Long ticketsAssignedUserCount = (long) ticketRepository.findByUserId(userId).size();
+        Long ticketsAssignedOtherUsersCount = (long) ticketRepository.findByNotUserId(userId).size();
+        Long ticketsNotAssignedCount = (long) ticketRepository.findTicketsWithoutUser().size();
+        TicketCountResponseDTO ticketResponseDTO = TicketCountResponseDTO.builder()
+                .allTicketsCount(allTicketsCount)
+                .ticketsAssignedUserCount(ticketsAssignedUserCount)
+                .ticketsAssignedOtherUsersCount(ticketsAssignedOtherUsersCount)
+                .ticketsNotAssignedCount(ticketsNotAssignedCount)
+                .build();
         return ticketResponseDTO;
     }
 
@@ -171,15 +173,15 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private TicketResponseDTO formatTicketToTicketResponseDTO(Ticket ticket){
-
-        List<UserForTicketResponseDTO> usersResponse = new ArrayList<>();
-        ticket.getUser().forEach(user -> {
-            var userResponse = UserForTicketResponseDTO.builder()
-                    .id(user.getId())
-                    .name(user.getName())
+        UserForTicketResponseDTO userResponse = new UserForTicketResponseDTO();
+        if (ticket.getUser().size() > 0) {
+            userResponse = UserForTicketResponseDTO.builder()
+                    .id(ticket.getUser().get(0).getId())
+                    .name(ticket.getUser().get(0).getName())
                     .build();
-             usersResponse.add(userResponse);
-        });
+        }
+
+
         ClientForTicketResponseDTO clientForTicketResponseDTO = ClientForTicketResponseDTO.builder()
                 .id(ticket.getClient().getId())
                 .razaoSocialName(ticket.getClient().getRazaoSocialName())
@@ -205,7 +207,7 @@ public class TicketServiceImpl implements TicketService {
                 .shortDescription(ticket.getShortDescription())
                 .client(clientForTicketResponseDTO)
                 .status(ticket.getStatus())
-                .users(usersResponse)
+                .user(userResponse)
                 .typeOfService(ticket.getTypeOfService())
                 .category(ticket.getCategory())
                 .scheduledDateTime(ticket.getScheduledDateTime())

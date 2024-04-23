@@ -1,10 +1,6 @@
 package dev.eliezer.superticket.controller;
 
-import dev.eliezer.superticket.domain.model.Ticket;
-import dev.eliezer.superticket.dto.TicketRequestDTO;
-import dev.eliezer.superticket.dto.TicketResponseDTO;
-import dev.eliezer.superticket.dto.TicketResponseForIndexDTO;
-import dev.eliezer.superticket.dto.UserResponseDTO;
+import dev.eliezer.superticket.dto.*;
 import dev.eliezer.superticket.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -21,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @CrossOrigin //cors
 @RestController
@@ -32,10 +29,10 @@ public record TicketRestController(TicketService ticketService) {
     @Operation(summary = "Get all tickets", description = "Retrieve a list of all registered tickets")//annotation for Swagger
     @ApiResponse(responseCode = "200", description = "Operation successful", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = TicketResponseDTO.class)))})
-    public ResponseEntity<TicketResponseForIndexDTO> findAll(HttpServletRequest request){
-        Long userId = Long.valueOf(request.getAttribute("user_id").toString());
-        var ticket = ticketService.index(userId);
-        return ResponseEntity.ok(ticket);
+    public ResponseEntity<List<TicketResponseDTO>> index(@RequestParam(value="user", defaultValue = "0") Long user,
+                                                         @RequestParam(value="type", defaultValue = "0") Long type){
+        var tickets = ticketService.index(user, type);
+        return ResponseEntity.ok(tickets);
     }
 
     @GetMapping("/{id}")
@@ -48,6 +45,21 @@ public record TicketRestController(TicketService ticketService) {
         var ticket = ticketService.findById(id);
         return ResponseEntity.ok(ticket);
     }
+
+    @GetMapping("/count")
+    @Operation(summary = "Get a number of tickets saved", description = "Retrieve a number of tickets saved")
+    @ApiResponse(responseCode = "200", description = "Operation successful",content = {
+            @Content(schema = @Schema(implementation = TicketCountResponseDTO.class))})
+    @ApiResponse(responseCode = "404", description = "Ticket not found", content = {
+            @Content(schema = @Schema(implementation = Object.class))})
+    public ResponseEntity<TicketCountResponseDTO> getTicketsCount(@Valid HttpServletRequest request){
+        Long userId = Long.valueOf(request.getAttribute("user_id").toString());
+        var numberTickets = ticketService.getTicketsCount(userId);
+        return ResponseEntity.ok(numberTickets);
+    }
+
+
+
     @PostMapping
     @Operation(summary = "Create a new ticket", description = "Create a new ticket and return the created ticket's data")
     @ApiResponse(responseCode = "201", description = "Ticket created successfully", content = {
