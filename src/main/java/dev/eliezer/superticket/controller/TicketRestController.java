@@ -30,8 +30,11 @@ public record TicketRestController(TicketService ticketService) {
     @ApiResponse(responseCode = "200", description = "Operation successful", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = TicketResponseDTO.class)))})
     public ResponseEntity<List<TicketResponseDTO>> index(@RequestParam(value="user", defaultValue = "0") Long user,
-                                                         @RequestParam(value="type", defaultValue = "0") Long type){
-        var tickets = ticketService.index(user, type);
+                                                         @RequestParam(value="type", defaultValue = "0") Long type,
+                                                         @RequestParam(value="search", defaultValue = "") String search,
+                                                         @RequestParam(value="search_type", defaultValue = "0") Long searchType){
+
+        var tickets = ticketService.index(user, type, search, searchType);
         return ResponseEntity.ok(tickets);
     }
 

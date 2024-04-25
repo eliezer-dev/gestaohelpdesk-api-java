@@ -9,7 +9,7 @@ import dev.eliezer.superticket.dto.TicketResponseForIndexDTO;
 import java.util.List;
 
 public interface TicketService {
-    List<TicketResponseDTO> index(Long userId, Long type);
+    List<TicketResponseDTO> index(Long userId, Long type, String search, Long searchType);
 
     TicketCountResponseDTO getTicketsCount(Long userId);
 

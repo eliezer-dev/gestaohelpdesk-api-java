@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -32,41 +33,165 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private UserServiceImpl userService;
 
-    public List<TicketResponseDTO> index(Long userId, Long type) {
+    public List<TicketResponseDTO> index(Long userId, Long type, String search, Long searchType) {
         List<TicketResponseDTO> ticketsList = new ArrayList<>();
 
+        //pesquisa todos os ticket
         if (userId == 0 && type == 0) {
-            ticketRepository.findAll().forEach(ticket -> {
-            var ticketDTO = formatTicketToTicketResponseDTO(ticket);
-            ticketsList.add(ticketDTO);
-            });
-            return ticketsList;
+            if (searchType != 0 && !search.isEmpty()) {
+                //pesquisa por id do ticket
+                if (searchType == 1) {
+                    Long id = Long.parseLong(search);
+                    Optional<Ticket> ticket = ticketRepository.findById(id);
+                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    return ticketsList;
+                }
+                //pesquisa por razão social do cliente
+                if (searchType == 2) {
+                    ticketRepository.findByClientRazaoSocialName(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+                //pesquisa cnpj
+                if (searchType == 3) {
+                    ticketRepository.findByCpfCnpj(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+            //pesquisa todos os ticket
+            }else {
+                ticketRepository.findAll().forEach(ticket -> {
+                    var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                    ticketsList.add(ticketDTO);
+                });
+                return ticketsList;
+            }
+        //pesquisa por chamados atribuídos ao usuário
         }else if (userId != 0 && type == 0) {
-            ticketRepository.findByUserId(userId).forEach(ticket -> {
-                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
-                ticketsList.add(ticketDTO);
-            });
-            return ticketsList;
+            if (searchType != 0 && !search.isEmpty()) {
+                //pesquisa por id do ticket
+                if (searchType == 1) {
+                    Long id = Long.parseLong(search);
+                    Optional<Ticket> ticket = ticketRepository.findByIdAndUserId(id, userId);
+                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    return ticketsList;
+                }
+                //pesquisa por razão social do cliente
+                if (searchType == 2) {
+                    ticketRepository.findByUserIdAndClientRazaoSocialName(userId, search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);});
+
+                    return ticketsList;
+                }
+                //pesquisa cnpj
+                if (searchType == 3) {
+                    ticketRepository.findByUserIdAndCpfCnpj(userId, search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);});
+
+                    return ticketsList;
+                }
+            //consulta todos os chamados atribuído ao usuário
+            } else {
+                ticketRepository.findByUserId(userId).forEach(ticket -> {
+                    var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                    ticketsList.add(ticketDTO);
+                });
+                return ticketsList;
+            }
+
+        //pesquisa por todos os chamados atribuídos a outros usuários
         }else if (type == 1) {
             if (userId == 0) {
                 throw new BusinessException("user id is not provided");
             }
-            ticketRepository.findByNotUserId(userId).forEach(ticket -> {
-                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
-                ticketsList.add(ticketDTO);
-            });
-            return ticketsList;
-        }else if (type == 2) {
-            ticketRepository.findTicketsWithoutUser().forEach(ticket -> {
-                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
-                ticketsList.add(ticketDTO);
-            });
-            return ticketsList;
+            if (searchType != 0 && !search.isEmpty()) {
+                //pesquisa por id do ticket
+                if (searchType == 1) {
+                    Long id = Long.parseLong(search);
+                    Optional<Ticket> ticket = ticketRepository.findByNotUserIdAndId(userId, id);
+                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    return ticketsList;
+                }
+                //pesquisa por razão social do cliente
+                if (searchType == 2) {
+                    ticketRepository.findByNotUserIdAndClientRazaoSocialName(userId, search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);});
 
+                    return ticketsList;
+                }
+                //pesquisa por cnpj
+                if (searchType == 3) {
+                    ticketRepository.findByNotUserIdAndCpfCnpj(userId, search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);});
+
+                    return ticketsList;
+                }
+                //pesquisa por todos os chamados atribuídos a outros usuários
+            }else {
+                ticketRepository.findByNotUserId(userId).forEach(ticket -> {
+                    var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                    ticketsList.add(ticketDTO);
+                });
+                return ticketsList;
+            }
+        //pesquisa por todos os chamados sem atribuição de usuário.
+        }else if (type == 2) {
+            if (searchType != 0 && !search.isEmpty()) {
+                //pesquisa por id do ticket
+                if (searchType == 1) {
+                    Long id = Long.parseLong(search);
+                    Optional<Ticket> ticket = ticketRepository.findByIdAndTicketsWithoutUser(id);
+                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    return ticketsList;
+                }
+                //pesquisa por razão social do cliente
+                if (searchType == 2) {
+                    ticketRepository.findByTicketsWithoutUserAndClientRazaoSocialName(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+                //pesquisa cnpj
+                if (searchType == 3) {
+                    ticketRepository.findByTicketsWithoutUserAndCpfCnpj(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+            //pesquisa por todos os chamados sem atribuição de usuário
+            } else {
+                ticketRepository.findByTicketsWithoutUser().forEach(ticket -> {
+                    var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                    ticketsList.add(ticketDTO);
+                });
+                return ticketsList;
+            }
         }else {
             throw new BusinessException("invalid option.");
         }
-
+        return ticketsList;
     }
 
     @Override
@@ -83,7 +208,7 @@ public class TicketServiceImpl implements TicketService {
         Long allTicketsCount = (long) ticketRepository.findAll().size();
         Long ticketsAssignedUserCount = (long) ticketRepository.findByUserId(userId).size();
         Long ticketsAssignedOtherUsersCount = (long) ticketRepository.findByNotUserId(userId).size();
-        Long ticketsNotAssignedCount = (long) ticketRepository.findTicketsWithoutUser().size();
+        Long ticketsNotAssignedCount = (long) ticketRepository.findByTicketsWithoutUser().size();
         TicketCountResponseDTO ticketResponseDTO = TicketCountResponseDTO.builder()
                 .allTicketsCount(allTicketsCount)
                 .ticketsAssignedUserCount(ticketsAssignedUserCount)
