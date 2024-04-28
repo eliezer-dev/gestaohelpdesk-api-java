@@ -12,36 +12,36 @@ import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE u.id = :userId")
+    @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE u.id = :userId ORDER BY t.id")
     List<Ticket> findByUserId(Long userId);
-    @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE t.id = :id AND u.id = :userId")
+    @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE t.id = :id AND u.id = :userId ORDER BY t.id")
     Optional<Ticket> findByIdAndUserId(Long id, Long userId);
-    @Query("SELECT t FROM tb_tickets t JOIN t.user u JOIN t.client c WHERE u.id = :userId AND LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%'))")
+    @Query("SELECT t FROM tb_tickets t JOIN t.user u JOIN t.client c WHERE u.id = :userId AND LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%')) ORDER BY t.id")
     List<Ticket> findByUserIdAndClientRazaoSocialName(Long userId, String razaoSocialName);
-    @Query("SELECT t FROM tb_tickets t JOIN t.client c JOIN t.user u WHERE u.id = :userId AND c.cpfCnpj LIKE %:cpfCnpj%")
+    @Query("SELECT t FROM tb_tickets t JOIN t.client c JOIN t.user u WHERE u.id = :userId AND c.cpfCnpj LIKE %:cpfCnpj% ORDER BY t.id")
     List<Ticket> findByUserIdAndCpfCnpj(Long userId, String cpfCnpj);
 
-    @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE u.id != :userId")
+    @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE u.id != :userId ORDER BY t.id")
     List<Ticket> findByNotUserId(Long userId);
     @Query("SELECT t FROM tb_tickets t JOIN t.user u WHERE u.id != :userId AND t.id = :id")
     Optional<Ticket> findByNotUserIdAndId(Long userId, Long id);
-    @Query("SELECT t FROM tb_tickets t JOIN t.user u JOIN t.client c WHERE u.id != :userId AND LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%'))")
+    @Query("SELECT t FROM tb_tickets t JOIN t.user u JOIN t.client c WHERE u.id != :userId AND LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%')) ORDER BY t.id")
     List<Ticket> findByNotUserIdAndClientRazaoSocialName(Long userId, String razaoSocialName);
-    @Query("SELECT t FROM tb_tickets t JOIN t.client c JOIN t.user u WHERE u.id != :userId AND c.cpfCnpj LIKE %:cpfCnpj%")
+    @Query("SELECT t FROM tb_tickets t JOIN t.client c JOIN t.user u WHERE u.id != :userId AND c.cpfCnpj LIKE %:cpfCnpj% ORDER BY t.id")
     List<Ticket> findByNotUserIdAndCpfCnpj(Long userId, String cpfCnpj);
 
 
-    @Query("SELECT t FROM tb_tickets t WHERE t.user IS EMPTY")
+    @Query("SELECT t FROM tb_tickets t WHERE t.user IS EMPTY ORDER BY t.id")
     List<Ticket> findByTicketsWithoutUser();
     @Query("SELECT t FROM tb_tickets t WHERE t.id = :id AND t.user IS EMPTY")
     Optional<Ticket> findByIdAndTicketsWithoutUser(Long id);
-    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE t.user IS EMPTY AND LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%'))")
+    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE t.user IS EMPTY AND LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%')) ORDER BY t.id")
     List<Ticket> findByTicketsWithoutUserAndClientRazaoSocialName(String razaoSocialName);
-    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE t.user is EMPTY AND c.cpfCnpj LIKE %:cpfCnpj%")
+    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE t.user is EMPTY AND c.cpfCnpj LIKE %:cpfCnpj% ORDER BY t.id")
     List<Ticket> findByTicketsWithoutUserAndCpfCnpj(String cpfCnpj);
 
-    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%'))")
+    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE LOWER(c.razaoSocialName) LIKE LOWER(concat('%', :razaoSocialName, '%')) ORDER BY t.id")
     List<Ticket> findByClientRazaoSocialName(String razaoSocialName);
-    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE c.cpfCnpj LIKE %:cpfCnpj%")
+    @Query("SELECT t FROM tb_tickets t JOIN t.client c WHERE c.cpfCnpj LIKE %:cpfCnpj% ORDER BY t.id")
     List<Ticket> findByCpfCnpj(String cpfCnpj);
 }

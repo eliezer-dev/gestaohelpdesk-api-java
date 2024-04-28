@@ -10,6 +10,7 @@ import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
@@ -68,7 +69,7 @@ public class TicketServiceImpl implements TicketService {
                 }
             //pesquisa todos os ticket
             }else {
-                ticketRepository.findAll().forEach(ticket -> {
+                ticketRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).forEach(ticket -> {
                     var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                     ticketsList.add(ticketDTO);
                 });
@@ -312,11 +313,12 @@ public class TicketServiceImpl implements TicketService {
                 .razaoSocialName(ticket.getClient().getRazaoSocialName())
                 .businessName(ticket.getClient().getBusinessName())
                 .cpfCnpj(ticket.getClient().getCpfCnpj())
+                .cep(ticket.getClient().getCep())
                 .address(ticket.getClient().getAddress())
                 .addressNumber(ticket.getClient().getAddressNumber())
-                .state(ticket.getClient().getState())
+                .neighborhood(ticket.getClient().getNeighborhood())
                 .city(ticket.getClient().getCity())
-                .cep(ticket.getClient().getCep())
+                .state(ticket.getClient().getState())
                 .email(ticket.getClient().getEmail())
                 .slaDefault(ticket.getClient().getSlaDefault())
                 .slaUrgency(ticket.getClient().getSlaUrgency())

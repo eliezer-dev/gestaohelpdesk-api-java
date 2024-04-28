@@ -6,6 +6,7 @@ import dev.eliezer.superticket.service.ClientService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,24 +23,19 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Object index(String search, Long typeSearch) {
         if (search.isEmpty()) {
-            return clientRepository.findAll();
+            return clientRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 
         }else {
             if (typeSearch == 1) {
                 return clientRepository.findByRazaoSocialNameIgnoreCaseContaining(search);
             }
             if (typeSearch == 2) {
-                return clientRepository.findByBusinessNameIgnoreCaseContaining(search);
+                return clientRepository.findByCpfCnpjStartingWith(search);
             }
             if (typeSearch == 3) {
-                List clientList = new ArrayList();
-                Optional<Client> client = clientRepository.findByCpfCnpj(search);
-                if (client.isPresent()) {
-                    clientList.add(client);
-                }
-
-                return clientList;
+                return clientRepository.findByIdStartingWith(search);
             }
+
             if (typeSearch == 4) {
                 return clientRepository.findByEmailIgnoreCaseContaining(search);
             }
@@ -49,8 +45,11 @@ public class ClientServiceImpl implements ClientService {
             if (typeSearch == 6) {
                 return clientRepository.findByAddressIgnoreCaseContaining(search);
             }
+            if (typeSearch == 7) {
+                return clientRepository.findByBusinessNameIgnoreCaseContaining(search);
+            }
         }
-        return clientRepository.findAll();
+        return clientRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 
     }
 
@@ -64,10 +63,8 @@ public class ClientServiceImpl implements ClientService {
     public Client insert(Client client) {
         Optional<Client> clientFound = clientRepository.findByCpfCnpj(client.getCpfCnpj());
         if(clientFound.isPresent()) {
-            clientFound = null;
             throw new BusinessException("[cpfCnpj] " + client.getCpfCnpj() + " já foi utilizado em outro cadastro.");
         }
-
         return clientRepository.save(client);
     }
 
@@ -83,10 +80,19 @@ public class ClientServiceImpl implements ClientService {
 
         clientToChange.setCpfCnpj(client.getCpfCnpj());
         clientToChange.setRazaoSocialName(client.getRazaoSocialName());
+        clientToChange.setBusinessName(client.getBusinessName());
         clientToChange.setCep(client.getCep());
+        clientToChange.setAddress(client.getAddress());
+        clientToChange.setAddressNumber(client.getAddressNumber());
+        clientToChange.setAddressNumber2(client.getAddressNumber2());
+        clientToChange.setNeighborhood(client.getNeighborhood());
         clientToChange.setState(client.getState());
         clientToChange.setCity(client.getCity());
-        clientToChange.setBusinessName(client.getBusinessName());
+        clientToChange.setEmail(client.getEmail());
+        clientToChange.setSlaDefault(client.getSlaDefault());
+        clientToChange.setSlaUrgency(client.getSlaUrgency());
+
+
         return clientRepository.save(clientToChange);
     }
 
@@ -96,5 +102,10 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.delete(clientToDelete);
     }
 
+    public void clientValidator(Client client) {
+        if (client.getCpfCnpj() == null) {
+            throw new BusinessException("[cpfCNPJ] is not provided");
+        }
+    }
 
 }

@@ -27,6 +27,8 @@ public class ClientForTicketResponseDTO {
     String address;
     @Schema(example = "456", requiredMode = Schema.RequiredMode.REQUIRED, description = "address number of client")
     String addressNumber;
+    @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
+    String neighborhood;
     @Schema(example = "RJ", requiredMode = Schema.RequiredMode.REQUIRED, description = "state of client")
     String state;
     @Schema(example = "Rio de Janeiro", requiredMode = Schema.RequiredMode.REQUIRED, description = "city of client")

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -52,17 +53,23 @@ public class Client {
     @Schema(example = "Rio de Janeiro", requiredMode = Schema.RequiredMode.REQUIRED, description = "city of client")
     String city;
 
+    @NotBlank(message = "[neighborhood] is not provided.")
+    @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
+    String neighborhood;
+
     @Email(message = "[email] is invalid.")
     @Schema(example = "contato@emporiojucarosa.com.br", description = "email of client")
     String email;
 
+    @Schema(example = "Proximo a Praça das Bandeiras", description = "address number 2 of client ")
+    String addressNumber2;
 
 
-    @NotBlank(message = "[slaDefault] is not provided.")
+    @NotNull(message = "[slaDefault] is not provided.")
     @Schema(example = "24", requiredMode = Schema.RequiredMode.REQUIRED, description = "time in hours of the sla contract in default cases")
     Long slaDefault;
 
-    @NotBlank(message = "[slaUrgency] is not provided.")
+    @NotNull(message = "[slaUrgency] is not provided.")
     @Schema(example = "4", requiredMode = Schema.RequiredMode.REQUIRED, description = "time in hours of the sla contract in urgent cases")
     Long slaUrgency;
 
