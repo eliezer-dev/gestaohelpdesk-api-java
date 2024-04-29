@@ -8,7 +8,7 @@ import dev.eliezer.superticket.dto.UserResponseDTO;
 import java.util.List;
 
 public interface UserService {
-    Iterable<UserResponseDTO> findAll();
+    Iterable<UserResponseDTO> index(String search, Long typeSearch);
     UserResponseDTO findById(Long id);
 
     UserResponseDTO insert(User user);

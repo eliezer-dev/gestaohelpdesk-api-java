@@ -1,6 +1,7 @@
 package dev.eliezer.superticket.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,11 +28,18 @@ public class UserForUpdateRequestDTO {
     @Schema(example = "123", description = "address number of user")
     private String addressNumber;
 
+    @Schema(example = "Proximo a Praça das Bandeiras", description = "address number 2 of client ")
+    String addressNumber2;
+
     @Schema(example = "SP", description = "state of user")
     private String state;
 
     @Schema(example = "Sao Paulo", description = "city of user")
     private String city;
+
+    @NotBlank(message = "[neighborhood] is not provided.")
+    @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
+    String neighborhood;
 
     @Schema(example = "paulo@gmail.com", description = "email of user")
     private String email;
@@ -40,6 +48,6 @@ public class UserForUpdateRequestDTO {
     private String oldPassword;
 
     @Schema(example = "12345password", description = "new password")
-    private String newPassword;
+    private String password;
 
 }

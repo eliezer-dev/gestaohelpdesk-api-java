@@ -39,8 +39,9 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
             @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class)))
     })
 
-    public ResponseEntity<Iterable<UserResponseDTO>> findAll(){
-        var allUsers = userService.findAll();
+    public ResponseEntity<Iterable<UserResponseDTO>> index(@RequestParam(value="search", defaultValue="") String search,
+                                                           @RequestParam(value="type", defaultValue="") Long typeSearch ){
+        var allUsers = userService.index(search, typeSearch);
 
         return ResponseEntity.ok(allUsers);
     }
@@ -84,14 +85,17 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
                     @Content(schema = @Schema(implementation = Object.class))})
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<UserResponseDTO> update(@Valid HttpServletRequest request, @RequestBody UserForUpdateRequestDTO userUpdate){
-        Long id = Long.valueOf(request.getAttribute("user_id").toString());
-        var userUpdated = userService.update(id, userUpdate);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(userUpdated.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(userUpdated);
+    public ResponseEntity<Object> update(@Valid HttpServletRequest request, @RequestBody UserForUpdateRequestDTO userUpdate, @PathVariable Long id){
+        try {
+            var userUpdated = userService.update(id, userUpdate);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(userUpdated.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(userUpdated);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

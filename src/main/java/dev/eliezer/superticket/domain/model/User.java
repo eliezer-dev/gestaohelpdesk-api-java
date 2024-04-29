@@ -43,6 +43,9 @@ public class User {
     @Schema(example = "123", requiredMode = Schema.RequiredMode.REQUIRED, description = "address number of user")
     private String addressNumber;
 
+    @Schema(example = "Proximo a Praça das Bandeiras", description = "address number 2 of client ")
+    String addressNumber2;
+
     @NotBlank(message = "[state] is not provided.")
     @Schema(example = "SP", requiredMode = Schema.RequiredMode.REQUIRED, description = "state of user")
     private String state;
@@ -50,6 +53,10 @@ public class User {
     @NotBlank(message = "[city] is not provided.")
     @Schema(example = "Sao Paulo", requiredMode = Schema.RequiredMode.REQUIRED, description = "city of user")
     private String city;
+
+    @NotBlank(message = "[neighborhood] is not provided.")
+    @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
+    String neighborhood;
 
     @Email(message = "[email] is invalid.")
     @Schema(example = "paulo@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED, description = "email of user")
