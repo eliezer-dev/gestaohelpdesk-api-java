@@ -13,6 +13,7 @@ import dev.eliezer.superticket.dto.UserForTicketResponseDTO;
 import dev.eliezer.superticket.service.TicketAnnotationService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,7 @@ public class TicketAnnotationServiceImpl implements TicketAnnotationService {
     }
 
     @Override
+
     public TicketAnnotationResponseDTO insert(TicketAnnotationRequestDTO request) {
         ticketAnnotationValidator(request);
         var ticketAnnotation = formatTicketAnnotationRequestDTOForTicketAnnotation(request);

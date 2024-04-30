@@ -6,6 +6,7 @@ import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.AuthUserRequestDTO;
 import dev.eliezer.superticket.dto.AuthUserResponseDTO;
 import dev.eliezer.superticket.dto.UserForAuthResponseDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,9 +29,8 @@ public class AuthUserServiceImpl {
     @Value("${security.token.secret-user}")
     private String secretKey;
 
-
     public AuthUserResponseDTO execute(AuthUserRequestDTO authUserRequestDTO) throws AuthenticationException {
-        var user = this.userRepository.findByEmail(authUserRequestDTO.getEmail())
+        var user = userRepository.findByEmail(authUserRequestDTO.getEmail())
                 .orElseThrow(() ->{
                     throw new UsernameNotFoundException("Usuário/e-mail ou senha incorretos");
                 });
@@ -61,7 +61,6 @@ public class AuthUserServiceImpl {
                         .addressNumber(user.getAddressNumber())
                         .state(user.getState())
                         .city(user.getCity())
-                        .avatar(user.getAvatar())
                         .build())
                 .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())

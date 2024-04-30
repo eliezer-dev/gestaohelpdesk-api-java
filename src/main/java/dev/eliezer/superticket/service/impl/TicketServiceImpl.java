@@ -9,6 +9,7 @@ import dev.eliezer.superticket.dto.*;
 import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -223,13 +224,13 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketResponseDTO insert(TicketRequestDTO ticketRequestDTO) {
         ticketValidator(ticketRequestDTO);
-        Ticket ticketInserted = formatTicketRequestDTOForTicket(ticketRequestDTO);
+        Ticket newTicket = formatTicketRequestDTOForTicket(ticketRequestDTO);
 
-        ticketRepository.save(ticketInserted);
-        ticketInserted = ticketRepository.findById(ticketInserted.getId())
+        Ticket response = ticketRepository.save(newTicket);
+        Ticket ticketSaved = ticketRepository.findById(response.getId())
                 .orElseThrow(() -> new BusinessException("Erro ao salvar Ticket"));
-
-        var ticketResponse = formatTicketToTicketResponseDTO(ticketInserted);
+        System.out.println(ticketSaved);
+        var ticketResponse = formatTicketToTicketResponseDTO(ticketSaved);
         return ticketResponse;
         }
 
@@ -324,9 +325,13 @@ public class TicketServiceImpl implements TicketService {
                 .slaUrgency(ticket.getClient().getSlaUrgency())
                 .build();
 
-        Duration slaInHours = Duration.ofHours(ticket.getCategory().getPriority() == 0 ? ticket.getClient().getSlaDefault() :
-                ticket.getClient().getSlaUrgency());
-        LocalDateTime slaDateTimeEnd = ticket.getCreateAt().plus(slaInHours);
+        Duration slaInHours = null;
+        LocalDateTime slaDateTimeEnd = null;
+        if (ticket.getCategory().getPriority() != null) {
+            slaInHours = Duration.ofHours(ticket.getCategory().getPriority() == 0 ? ticket.getClient().getSlaDefault() :
+                    ticket.getClient().getSlaUrgency());
+            slaDateTimeEnd = ticket.getCreateAt().plus(slaInHours);
+        }
 
         var ticketsReponse = TicketResponseDTO.builder()
                 .id(ticket.getId())

@@ -6,6 +6,7 @@ import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.service.StatusService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

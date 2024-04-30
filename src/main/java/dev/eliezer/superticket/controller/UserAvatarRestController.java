@@ -1,11 +1,8 @@
 package dev.eliezer.superticket.controller;
 
-import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.impl.UserAvatarServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.AuthenticationException;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
-
-import static dev.eliezer.superticket.config.Upload.UPLOAD_FOLDER;
 
 @CrossOrigin
 @RestController

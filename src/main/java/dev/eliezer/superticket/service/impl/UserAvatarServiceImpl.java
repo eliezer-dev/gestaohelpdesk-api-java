@@ -1,19 +1,20 @@
 package dev.eliezer.superticket.service.impl;
 
 import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.domain.model.UserPicture;
+import dev.eliezer.superticket.domain.repository.UserPictureRepository;
 import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.providers.ImageUtil;
+import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-
-import static dev.eliezer.superticket.providers.DiskStorage.getFiles;
-import static dev.eliezer.superticket.providers.DiskStorage.saveFiles;
+import java.nio.file.Files;
+import java.util.Base64;
 
 @Service
 public class UserAvatarServiceImpl {
@@ -21,37 +22,71 @@ public class UserAvatarServiceImpl {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserPictureRepository userPictureRepository;
+
     public User update(Long id, MultipartFile file) throws IOException {
 
         var userToChange = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id));
 
-        try {
-            String filenameSaved = saveFiles(file);
+        UserPicture userPicture = userPictureRepository.save(UserPicture.builder()
+                .filename(file.getOriginalFilename())
+                .type(file.getContentType())
+                .imageData(ImageUtil.compressImage(file.getBytes()))
+                .build());
 
-            if (filenameSaved != "" || filenameSaved != null) {
-                userToChange.setAvatar(filenameSaved);
-            }
-            return userRepository.save(userToChange);
-        }catch (IOException e) {
-            e.printStackTrace();
-            throw new IOException("Não foi possível salvar a imagem");
-        }
+        userToChange.setIdPicture(userPicture.getId());
+
+        User userUpdated = userRepository.save(userToChange);
+
+        return userUpdated;
+
+
+//        try {
+//            String filenameSaved = saveFiles(file);
+//
+//            if (filenameSaved != "" || filenameSaved != null) {
+//                userToChange.setAvatar(filenameSaved);
+//            }
+//            return userRepository.save(userToChange);
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//            throw new IOException("Não foi possível salvar a imagem");
+//        }
 
     }
 
     public String getAvatar (Long id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        String avatar = null;
-        if (!(user.getAvatar() == null)) {
-            try {
-                avatar = getFiles(user.getAvatar());
-            }catch (IOException e ) {
-                e.printStackTrace();
-                throw  new IOException("Não foi possível carregar a imagem.");
-            }
+        UserPicture userPicture = new UserPicture();
+
+        if (user.getIdPicture() == null) {
+            throw new BusinessException("The user does not have an avatar.");
         }
-        return avatar;
+
+        userPicture = userPictureRepository.findById(user.getIdPicture())
+                .orElseThrow(() -> new BusinessException("Erro no banco de dados"));
+
+        byte[] image = ImageUtil.decompressImage(userPicture.getImageData());
+
+        return Base64.getEncoder().encodeToString(image);
+
+
+
+
+        
+//        String avatar = null;
+//        if (!(user.getAvatar() == null)) {
+//            try {
+//                avatar = getFiles(user.getAvatar());
+//            }catch (IOException e ) {
+//                e.printStackTrace();
+//                throw  new IOException("Não foi possível carregar a imagem.");
+//            }
+//        }
+//        return avatar;
+
     }
 }
 

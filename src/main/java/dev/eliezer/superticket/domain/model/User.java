@@ -1,5 +1,6 @@
 package dev.eliezer.superticket.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -9,7 +10,6 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
-
 import java.time.LocalDateTime;
 
 @Data
@@ -69,10 +69,23 @@ public class User {
     @Schema(example = "ABCDEFG12345-minhafoto.jpg", description = "avatar do usuário")
     private String avatar;
 
+//    @OneToOne(fetch = FetchType.EAGER)
+//    private UserPicture userPicture;
+
     @CreationTimestamp
     private LocalDateTime createAt;
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
+
+    @Column(name = "id_picture")
+    private Long idPicture;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_picture", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    private UserPicture userPicture;
+
+
 
 }

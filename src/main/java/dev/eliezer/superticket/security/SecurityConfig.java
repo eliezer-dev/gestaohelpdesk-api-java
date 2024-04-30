@@ -29,7 +29,8 @@ public class SecurityConfig {
     private static final String[] SWAGGER_LIST = {
             "/swagger-ui/*",
             "/v3/api-docs/**",
-            "/swagger-resources/**"
+            "/swagger-resources/**",
+            "/documentation"
     };
 
     @Bean
@@ -43,7 +44,6 @@ public class SecurityConfig {
                             .requestMatchers("/users/auth").permitAll()
                             .requestMatchers(SWAGGER_LIST).permitAll()
                             .requestMatchers("/system/status").permitAll();
-
                     auth.anyRequest().authenticated();
                 })
                .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
@@ -61,7 +61,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("https://gestaohelpdesk.eliezer.tec.br");
+        configuration.addAllowedOrigin("https://main.d1765lu4pm17ty.amplifyapp.com");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
