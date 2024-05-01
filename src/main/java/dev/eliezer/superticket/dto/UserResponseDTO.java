@@ -42,7 +42,6 @@ public class UserResponseDTO {
     @Schema(example = "Sao Paulo", requiredMode = Schema.RequiredMode.REQUIRED, description = "city of user")
     private String city;
 
-    @NotBlank(message = "[neighborhood] is not provided.")
     @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
     String neighborhood;
 

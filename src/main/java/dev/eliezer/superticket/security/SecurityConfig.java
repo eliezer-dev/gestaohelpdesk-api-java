@@ -47,7 +47,7 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
                .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
-        http.formLogin(withDefaults());
+        //http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
 
@@ -63,6 +63,8 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("https://gestaohelpdesk.eliezer.tec.br");
         configuration.addAllowedOrigin("https://main.d1765lu4pm17ty.amplifyapp.com");
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("localhost:5173");
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");

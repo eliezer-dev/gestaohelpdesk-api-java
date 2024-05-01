@@ -229,7 +229,6 @@ public class TicketServiceImpl implements TicketService {
         Ticket response = ticketRepository.save(newTicket);
         Ticket ticketSaved = ticketRepository.findById(response.getId())
                 .orElseThrow(() -> new BusinessException("Erro ao salvar Ticket"));
-        System.out.println(ticketSaved);
         var ticketResponse = formatTicketToTicketResponseDTO(ticketSaved);
         return ticketResponse;
         }

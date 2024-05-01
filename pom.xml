@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.eliezer</groupId>
     <artifactId>gestao-helpdesk</artifactId>
-    <version>0.0.4-dev</version>
+    <version>0.0.8</version>
     <name>Gestao Heldesk</name>
     <description>Software para gestão de chamados de atendimento heldesk</description>
     <properties>

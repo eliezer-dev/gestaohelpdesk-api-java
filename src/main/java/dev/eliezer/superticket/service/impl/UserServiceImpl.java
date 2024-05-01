@@ -123,13 +123,13 @@ public class UserServiceImpl implements UserService {
         userToChange.setAddressNumber2(userUpdate.getAddressNumber2() != null ? userUpdate.getAddressNumber2() : userToChange.getAddressNumber2());
 
 
-        if (userUpdate.getPassword() == null){
+        if (userUpdate.getPassword() == null || userUpdate.getPassword().isEmpty()){
             userToChange.setPassword(userToChange.getPassword());
             User userSaved = userRepository.save(userToChange);
             return formatUserToUserResponseDTO(userSaved);
         }
 
-        if (userUpdate.getOldPassword() == null) {
+        if (userUpdate.getOldPassword() == null || userUpdate.getOldPassword().isEmpty()) {
             throw new BusinessException("Senha atual não informada.");
         }
 

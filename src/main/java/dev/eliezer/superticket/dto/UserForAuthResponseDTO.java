@@ -38,4 +38,7 @@ public class UserForAuthResponseDTO {
 
     @Schema(example = "", description = "avatar of user")
     private String avatar;
+
+    @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
+    String neighborhood;
 }
