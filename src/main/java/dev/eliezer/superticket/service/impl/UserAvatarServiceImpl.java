@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Base64;
 
 @Service
@@ -25,7 +23,7 @@ public class UserAvatarServiceImpl {
     @Autowired
     private UserPictureRepository userPictureRepository;
 
-    public User update(Long id, MultipartFile file) throws IOException {
+    public String update(Long id, MultipartFile file) throws IOException {
 
         var userToChange = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id));
@@ -36,24 +34,15 @@ public class UserAvatarServiceImpl {
                 .imageData(ImageUtil.compressImage(file.getBytes()))
                 .build());
 
+        if (!(userToChange.getIdPicture() == null)) {
+            userPictureRepository.deleteById(userToChange.getIdPicture());
+        }
+
         userToChange.setIdPicture(userPicture.getId());
 
-        User userUpdated = userRepository.save(userToChange);
+        userRepository.save(userToChange);
 
-        return userUpdated;
-
-
-//        try {
-//            String filenameSaved = saveFiles(file);
-//
-//            if (filenameSaved != "" || filenameSaved != null) {
-//                userToChange.setAvatar(filenameSaved);
-//            }
-//            return userRepository.save(userToChange);
-//        }catch (IOException e) {
-//            e.printStackTrace();
-//            throw new IOException("Não foi possível salvar a imagem");
-//        }
+        return Base64.getEncoder().encodeToString(file.getBytes());
 
     }
 
@@ -66,26 +55,12 @@ public class UserAvatarServiceImpl {
         }
 
         userPicture = userPictureRepository.findById(user.getIdPicture())
-                .orElseThrow(() -> new BusinessException("Erro no banco de dados"));
+                .orElseThrow(() -> new BusinessException("image not found."));
 
         byte[] image = ImageUtil.decompressImage(userPicture.getImageData());
 
         return Base64.getEncoder().encodeToString(image);
 
-
-
-
-        
-//        String avatar = null;
-//        if (!(user.getAvatar() == null)) {
-//            try {
-//                avatar = getFiles(user.getAvatar());
-//            }catch (IOException e ) {
-//                e.printStackTrace();
-//                throw  new IOException("Não foi possível carregar a imagem.");
-//            }
-//        }
-//        return avatar;
 
     }
 }

@@ -28,7 +28,7 @@ public record SystemRestController() {
     @ApiResponse(responseCode = "200", description = "Operation successful", content = {
             @Content(examples = @ExampleObject("Gestão Helpdesk is working"))})
     public ResponseEntity<String> status(){
-        return ResponseEntity.ok("Gestao Helpdesk is working in version 0.0.9");
+        return ResponseEntity.ok("Gestao Helpdesk is working in version 0.1.1");
     }
 
 
