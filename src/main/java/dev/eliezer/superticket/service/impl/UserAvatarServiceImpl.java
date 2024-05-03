@@ -7,6 +7,7 @@ import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.providers.ImageUtil;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public class UserAvatarServiceImpl {
     private UserPictureRepository userPictureRepository;
 
     public String update(Long id, MultipartFile file) throws IOException {
-
+        Long idPictureToDelete = null;
         var userToChange = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id));
 
@@ -35,16 +36,21 @@ public class UserAvatarServiceImpl {
                 .build());
 
         if (!(userToChange.getIdPicture() == null)) {
-            userPictureRepository.deleteById(userToChange.getIdPicture());
+            idPictureToDelete = userToChange.getIdPicture();
         }
 
         userToChange.setIdPicture(userPicture.getId());
-
         userRepository.save(userToChange);
+
+        if (!(idPictureToDelete == null)) {
+            userPictureRepository.deleteById(idPictureToDelete);
+        }
 
         return Base64.getEncoder().encodeToString(file.getBytes());
 
     }
+
+
 
     public String getAvatar (Long id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));

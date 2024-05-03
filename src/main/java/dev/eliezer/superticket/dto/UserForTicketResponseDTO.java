@@ -16,6 +16,6 @@ public class UserForTicketResponseDTO {
     @Schema(example = "Paulo Silva", requiredMode = Schema.RequiredMode.REQUIRED, description = "name and last name of user")
     private String name;
 
-    @Schema(example = "ABCDEFG12345-minhafoto.jpg", description = "avatar do usuário")
+    @Schema(example = "", description = "avatar do usuário")
     private String avatar;
 }

@@ -3,13 +3,16 @@ package dev.eliezer.superticket.service.impl;
 import dev.eliezer.superticket.domain.model.Ticket;
 import dev.eliezer.superticket.domain.model.TicketAnnotation;
 import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.domain.model.UserPicture;
 import dev.eliezer.superticket.domain.repository.TicketAnnotationRepository;
 import dev.eliezer.superticket.domain.repository.TicketRepository;
+import dev.eliezer.superticket.domain.repository.UserPictureRepository;
 import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.TicketAnnotationRequestDTO;
 import dev.eliezer.superticket.dto.TicketAnnotationResponseDTO;
 import dev.eliezer.superticket.dto.TicketRequestDTO;
 import dev.eliezer.superticket.dto.UserForTicketResponseDTO;
+import dev.eliezer.superticket.providers.ImageUtil;
 import dev.eliezer.superticket.service.TicketAnnotationService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static dev.eliezer.superticket.providers.DiskStorage.getFiles;
@@ -31,6 +35,9 @@ public class TicketAnnotationServiceImpl implements TicketAnnotationService {
     private TicketRepository ticketRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserPictureRepository userPictureRepository;
 
     @Override
     public List<TicketAnnotationResponseDTO> findByTicketId(Long ticketId) {
@@ -111,13 +118,14 @@ public class TicketAnnotationServiceImpl implements TicketAnnotationService {
     private TicketAnnotationResponseDTO formatTicketAnnotationForTicketAnnotationResponseDTO(TicketAnnotation ticketAnnotation) {
         var user = userRepository.findById(ticketAnnotation.getUser().getId()).orElseThrow(() -> new NotFoundException(ticketAnnotation.getId()));
         String avatar = null;
-        if (!(user.getAvatar() == null)) {
-            try {
-                avatar = getFiles(user.getAvatar());
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new BusinessException("Não foi possível carregar a imagem.");
-            }
+        if (!(user.getIdPicture() == null)) {
+                UserPicture userPicture = userPictureRepository.findById(user.getIdPicture())
+                        .orElseThrow(() -> new BusinessException("image not found."));
+
+                byte[] image = ImageUtil.decompressImage(userPicture.getImageData());
+
+                avatar = Base64.getEncoder().encodeToString(image);
+
         }
        
         UserForTicketResponseDTO userForTicketResponseDTO = new UserForTicketResponseDTO();
