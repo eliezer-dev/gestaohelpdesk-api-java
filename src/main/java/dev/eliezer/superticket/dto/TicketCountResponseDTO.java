@@ -24,4 +24,13 @@ public class TicketCountResponseDTO {
     @Schema(example = "5",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "count all tickets not assigned to any users")
     private Long ticketsNotAssignedCount;
+
+    @Schema(example = "10",
+            requiredMode = Schema.RequiredMode.REQUIRED, description = "count all completed tickets")
+    private Long completedTicketsCount;
+
+    @Schema(example = "10",
+            requiredMode = Schema.RequiredMode.REQUIRED, description = "count all closed tickets")
+    private Long closedTicketsCount;
+
 }

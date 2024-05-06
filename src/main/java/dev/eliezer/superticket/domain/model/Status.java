@@ -24,11 +24,10 @@ public class Status {
     @Schema(example = "1",
             requiredMode = Schema.RequiredMode.REQUIRED, description = """
             type of status:
-            1:  standard.
+            1:  open.
+            1:  in progress.
             2: done.
             3: closed.
-            4: pending.
-            5: canceled.
             """)
     Long type;
 

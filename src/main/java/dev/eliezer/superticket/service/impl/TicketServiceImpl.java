@@ -37,20 +37,27 @@ public class TicketServiceImpl implements TicketService {
 
     public List<TicketResponseDTO> index(Long userId, Long type, String search, Long searchType) {
         List<TicketResponseDTO> ticketsList = new ArrayList<>();
-
+        /*
+        * type == 0 -> retorna todos os chamados, opção Todos os Chamados no front.
+        *
+        * */
         //pesquisa todos os ticket
         if (userId == 0 && type == 0) {
             if (searchType != 0 && !search.isEmpty()) {
                 //pesquisa por id do ticket
                 if (searchType == 1) {
-                    Long id = Long.parseLong(search);
-                    Optional<Ticket> ticket = ticketRepository.findById(id);
-                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    String id = search;
+                    ticketRepository
+                            .findByIdStartingWithAndNotStatusTypeClosed(id)
+                            .forEach(ticket -> {
+                                ticketsList.add(formatTicketToTicketResponseDTO(ticket));
+                            });
                     return ticketsList;
                 }
                 //pesquisa por razão social do cliente
                 if (searchType == 2) {
-                    ticketRepository.findByClientRazaoSocialName(search).
+                    String razaoSocialName = search;
+                    ticketRepository.findByClientRazaoSocialNameAndNotStatusTypeClosed(razaoSocialName).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);
@@ -60,7 +67,8 @@ public class TicketServiceImpl implements TicketService {
                 }
                 //pesquisa cnpj
                 if (searchType == 3) {
-                    ticketRepository.findByCpfCnpj(search).
+                    String cpfCnpj = search;
+                    ticketRepository.findByCpfCnpjAndNotStatusTypeClosed(cpfCnpj).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);
@@ -70,7 +78,7 @@ public class TicketServiceImpl implements TicketService {
                 }
             //pesquisa todos os ticket
             }else {
-                ticketRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).forEach(ticket -> {
+                ticketRepository.findAllByStatusTypeNotClosed().forEach(ticket -> {
                     var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                     ticketsList.add(ticketDTO);
                 });
@@ -81,14 +89,16 @@ public class TicketServiceImpl implements TicketService {
             if (searchType != 0 && !search.isEmpty()) {
                 //pesquisa por id do ticket
                 if (searchType == 1) {
-                    Long id = Long.parseLong(search);
-                    Optional<Ticket> ticket = ticketRepository.findByIdAndUserId(id, userId);
-                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    String id = search;
+                    ticketRepository.findByIdAndUserIdAndNotStatusTypeClosed(id, userId)
+                            .forEach(ticket -> {
+                                ticketsList.add(formatTicketToTicketResponseDTO(ticket));
+                            });
                     return ticketsList;
                 }
                 //pesquisa por razão social do cliente
                 if (searchType == 2) {
-                    ticketRepository.findByUserIdAndClientRazaoSocialName(userId, search).
+                    ticketRepository.findByUserIdAndClientRazaoSocialNameAndNotStatusTypeClosed(userId, search).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);});
@@ -97,7 +107,7 @@ public class TicketServiceImpl implements TicketService {
                 }
                 //pesquisa cnpj
                 if (searchType == 3) {
-                    ticketRepository.findByUserIdAndCpfCnpj(userId, search).
+                    ticketRepository.findByUserIdAndCpfCnpjAndNotStatusTypeClosed(userId, search).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);});
@@ -106,7 +116,7 @@ public class TicketServiceImpl implements TicketService {
                 }
             //consulta todos os chamados atribuído ao usuário
             } else {
-                ticketRepository.findByUserId(userId).forEach(ticket -> {
+                ticketRepository.findByUserIdAndNotStatusTypeClosed(userId).forEach(ticket -> {
                     var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                     ticketsList.add(ticketDTO);
                 });
@@ -121,14 +131,16 @@ public class TicketServiceImpl implements TicketService {
             if (searchType != 0 && !search.isEmpty()) {
                 //pesquisa por id do ticket
                 if (searchType == 1) {
-                    Long id = Long.parseLong(search);
-                    Optional<Ticket> ticket = ticketRepository.findByNotUserIdAndId(userId, id);
-                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    String id = search;
+                    ticketRepository.findByNotUserIdAndIdAndNotStatusTypeClosed(userId, id)
+                            .forEach(ticket -> {
+                                ticketsList.add(formatTicketToTicketResponseDTO(ticket));
+                            });
                     return ticketsList;
                 }
                 //pesquisa por razão social do cliente
                 if (searchType == 2) {
-                    ticketRepository.findByNotUserIdAndClientRazaoSocialName(userId, search).
+                    ticketRepository.findByNotUserIdAndClientRazaoSocialNameAndNotStatusTypeClosed(userId, search).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);});
@@ -137,7 +149,7 @@ public class TicketServiceImpl implements TicketService {
                 }
                 //pesquisa por cnpj
                 if (searchType == 3) {
-                    ticketRepository.findByNotUserIdAndCpfCnpj(userId, search).
+                    ticketRepository.findByNotUserIdAndCpfCnpjAndNotStatusTypeClosed(userId, search).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);});
@@ -146,7 +158,7 @@ public class TicketServiceImpl implements TicketService {
                 }
                 //pesquisa por todos os chamados atribuídos a outros usuários
             }else {
-                ticketRepository.findByNotUserId(userId).forEach(ticket -> {
+                ticketRepository.findByNotUserIdAndNotStatusTypeClosed(userId).forEach(ticket -> {
                     var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                     ticketsList.add(ticketDTO);
                 });
@@ -157,14 +169,16 @@ public class TicketServiceImpl implements TicketService {
             if (searchType != 0 && !search.isEmpty()) {
                 //pesquisa por id do ticket
                 if (searchType == 1) {
-                    Long id = Long.parseLong(search);
-                    Optional<Ticket> ticket = ticketRepository.findByIdAndTicketsWithoutUser(id);
-                    ticket.ifPresent(value -> ticketsList.add(formatTicketToTicketResponseDTO(value)));
+                    String id = search;
+                    ticketRepository.findByIdAndTicketsWithoutUserAndNotStatusTypeClosed(id)
+                            .forEach(ticket -> {
+                                ticketsList.add(formatTicketToTicketResponseDTO(ticket));
+                            });
                     return ticketsList;
                 }
                 //pesquisa por razão social do cliente
                 if (searchType == 2) {
-                    ticketRepository.findByTicketsWithoutUserAndClientRazaoSocialName(search).
+                    ticketRepository.findByTicketsWithoutUserAndClientRazaoSocialNameAndNotStatusTypeClosed(search).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);
@@ -174,7 +188,7 @@ public class TicketServiceImpl implements TicketService {
                 }
                 //pesquisa cnpj
                 if (searchType == 3) {
-                    ticketRepository.findByTicketsWithoutUserAndCpfCnpj(search).
+                    ticketRepository.findByTicketsWithoutUserAndCpfCnpjAndNotStatusTypeClosed(search).
                             forEach(ticket -> {
                                 var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                                 ticketsList.add(ticketDTO);
@@ -182,14 +196,95 @@ public class TicketServiceImpl implements TicketService {
 
                     return ticketsList;
                 }
-            //pesquisa por todos os chamados sem atribuição de usuário
+                //pesquisa por todos os chamados sem atribuição de usuário
             } else {
-                ticketRepository.findByTicketsWithoutUser().forEach(ticket -> {
+                ticketRepository.findByTicketsWithoutUserAndNotStatusTypeClosed().forEach(ticket -> {
                     var ticketDTO = formatTicketToTicketResponseDTO(ticket);
                     ticketsList.add(ticketDTO);
                 });
                 return ticketsList;
             }
+
+        //pesquisa por chamados concluídos.
+        }else if (type == 3) {
+            if (searchType != 0 && !search.isEmpty()) {
+                //pesquisa por id do ticket
+                if (searchType == 1) {
+                    String id = search;
+                    ticketRepository.findAllCompletedTicketsById(id)
+                            .forEach(ticket -> {
+                                ticketsList.add(formatTicketToTicketResponseDTO(ticket));
+                            });
+                    return ticketsList;
+                }
+                //pesquisa por razão social do cliente
+                if (searchType == 2) {
+                    ticketRepository.findAllCompletedTicketsByClientRazaoSocialName(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+                //pesquisa cnpj
+                if (searchType == 3) {
+                    ticketRepository.findAllCompletedTicketsByCpfCnpj(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+                //pesquisa por todos os chamados sem atribuição de usuário
+            } else {
+                ticketRepository.findAllCompletedTickets().forEach(ticket -> {
+                    var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                    ticketsList.add(ticketDTO);
+                });
+                return ticketsList;
+            }
+        }else if (type == 4) {
+            if (searchType != 0 && !search.isEmpty()) {
+                //pesquisa por id do ticket
+                if (searchType == 1) {
+                    String id = search;
+                    ticketRepository.findAllClosedTicketsById(id)
+                            .forEach(ticket -> {
+                                ticketsList.add(formatTicketToTicketResponseDTO(ticket));
+                            });
+                    return ticketsList;
+                }
+                //pesquisa por razão social do cliente
+                if (searchType == 2) {
+                    ticketRepository.findAllClosedTicketsByClientRazaoSocialName(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+                //pesquisa cnpj
+                if (searchType == 3) {
+                    ticketRepository.findAllClosedTicketsByCpfCnpj(search).
+                            forEach(ticket -> {
+                                var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                                ticketsList.add(ticketDTO);
+                            });
+
+                    return ticketsList;
+                }
+                //pesquisa por todos os chamados sem atribuição de usuário
+            } else {
+                ticketRepository.findAllClosedTickets().forEach(ticket -> {
+                    var ticketDTO = formatTicketToTicketResponseDTO(ticket);
+                    ticketsList.add(ticketDTO);
+                });
+                return ticketsList;
+            }
+
         }else {
             throw new BusinessException("invalid option.");
         }
@@ -207,17 +302,21 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketCountResponseDTO getTicketsCount(Long userId) {
-        Long allTicketsCount = (long) ticketRepository.findAll().size();
-        Long ticketsAssignedUserCount = (long) ticketRepository.findByUserId(userId).size();
-        Long ticketsAssignedOtherUsersCount = (long) ticketRepository.findByNotUserId(userId).size();
-        Long ticketsNotAssignedCount = (long) ticketRepository.findByTicketsWithoutUser().size();
-        TicketCountResponseDTO ticketResponseDTO = TicketCountResponseDTO.builder()
+        Long allTicketsCount = (long) ticketRepository.findAllByStatusTypeNotClosed().size();
+        Long ticketsAssignedUserCount = (long) ticketRepository.findByUserIdAndNotStatusTypeClosed(userId).size();
+        Long ticketsAssignedOtherUsersCount = (long) ticketRepository.findByNotUserIdAndNotStatusTypeClosed(userId).size();
+        Long ticketsNotAssignedCount = (long) ticketRepository.findByTicketsWithoutUserAndNotStatusTypeClosed().size();
+        Long completedTicketsCount = (long) ticketRepository.findAllCompletedTickets().size();
+        Long closedTicketsCount = (long) ticketRepository.findAllClosedTickets().size();
+        TicketCountResponseDTO ticketCountResponseDTO = TicketCountResponseDTO.builder()
                 .allTicketsCount(allTicketsCount)
                 .ticketsAssignedUserCount(ticketsAssignedUserCount)
                 .ticketsAssignedOtherUsersCount(ticketsAssignedOtherUsersCount)
                 .ticketsNotAssignedCount(ticketsNotAssignedCount)
+                .completedTicketsCount(completedTicketsCount)
+                .closedTicketsCount(closedTicketsCount)
                 .build();
-        return ticketResponseDTO;
+        return ticketCountResponseDTO;
     }
 
 
