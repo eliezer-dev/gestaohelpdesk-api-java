@@ -24,7 +24,7 @@ public class Status {
     @Schema(example = "1",
             requiredMode = Schema.RequiredMode.REQUIRED, description = """
             type of status:
-            1:  open.
+            0:  open.
             1:  in progress.
             2: done.
             3: closed.

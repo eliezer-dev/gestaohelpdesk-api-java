@@ -403,6 +403,7 @@ public class TicketServiceImpl implements TicketService {
             userResponse = UserForTicketResponseDTO.builder()
                     .id(ticket.getUser().get(0).getId())
                     .name(ticket.getUser().get(0).getName())
+                    .username(ticket.getUser().get(0).getUsername())
                     .build();
         }
 
