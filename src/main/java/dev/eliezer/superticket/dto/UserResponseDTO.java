@@ -51,9 +51,6 @@ public class UserResponseDTO {
     @Schema(example = "paulo@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED, description = "email of user")
     private String email;
 
-    @Schema(example = "paulo.silva", minLength = 4, maxLength = 30, requiredMode = Schema.RequiredMode.REQUIRED, description = "username")
-    private String username;
-
     @Schema(example = "2024-03-25T10:30:00", description = "date and time the ticket was created")
     private LocalDateTime createAt;
 

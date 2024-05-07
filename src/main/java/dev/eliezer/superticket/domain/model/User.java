@@ -62,11 +62,6 @@ public class User {
     @Schema(example = "paulo@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED, description = "email of user")
     private String email;
 
-    @Column(length = 30)
-    @Length(min = 4, max = 30, message = "O username deve ter entre 4 e 30 caracteres")
-    @Schema(example = "paulo.silva", minLength = 4, maxLength = 30, requiredMode = Schema.RequiredMode.REQUIRED, description = "username")
-    private String username;
-
     @Length(min = 8, max = 100, message = "[password] length must be between 8 and 100 characters")
     @Schema(example = "senha@1234", requiredMode = Schema.RequiredMode.REQUIRED, description = "password of user", minLength = 8, maxLength = 30)
     private String password;

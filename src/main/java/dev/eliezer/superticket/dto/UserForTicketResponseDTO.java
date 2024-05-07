@@ -18,6 +18,4 @@ public class UserForTicketResponseDTO {
 
     @Schema(example = "", description = "avatar do usuário")
     private String avatar;
-
-    private String username;
 }
