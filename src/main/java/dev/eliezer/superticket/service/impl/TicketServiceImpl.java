@@ -361,8 +361,6 @@ public class TicketServiceImpl implements TicketService {
 
     private void ticketValidator(TicketRequestDTO ticketRequestDTO){
 
-        if (ticketRequestDTO.getUsers() == null)
-            throw new BusinessException("User is not provided");
         if (ticketRequestDTO.getClient() == null)
             throw new BusinessException("Client is not provided");
         if (ticketRequestDTO.getStatus() == null)
@@ -374,14 +372,14 @@ public class TicketServiceImpl implements TicketService {
         if (!clientRepository.existsById(ticketRequestDTO.getClient().getId()))
             throw new BusinessException("Client with id " + ticketRequestDTO.getClient().getId() + " does not exist.");
 
-        //checkifUserExists
-        ticketRequestDTO.getUsers().forEach(user ->{
-            if (user.getId() == null)
-                throw new BusinessException("User is not provided");
-            if (!userRepository.existsById(user.getId()))
-                throw new BusinessException("User with id " + user.getId() + " does not exist.\n" +
-                        "The operation was aborted.");
-        });
+        if (ticketRequestDTO.getUsers() != null) {
+            ticketRequestDTO.getUsers().forEach(user ->{
+                if (!userRepository.existsById(user.getId()))
+                    throw new BusinessException("User with id " + user.getId() + " does not exist.\n" +
+                            "The operation was aborted.");
+            });
+        }
+
 
         //checkIfStatusExists
         if (ticketRequestDTO.getStatus().getId() == null)
