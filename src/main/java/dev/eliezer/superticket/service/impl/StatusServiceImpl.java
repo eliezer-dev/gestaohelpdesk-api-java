@@ -8,6 +8,7 @@ import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +18,7 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public Iterable<Status> findAll() {
-        return statusRepository.findAll();
+        return statusRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
@@ -34,6 +35,7 @@ public class StatusServiceImpl implements StatusService {
     public Status update(Long id, Status status) {
         Status statusToChange =  statusRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         statusToChange.setDescription(status.getDescription());
+        statusToChange.setType(status.getType());
         return statusRepository.save(statusToChange);
     }
 
