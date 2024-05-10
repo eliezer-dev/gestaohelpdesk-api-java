@@ -6,6 +6,7 @@ import dev.eliezer.superticket.dto.AuthUserResponseDTO;
 import dev.eliezer.superticket.dto.UserForUpdateRequestDTO;
 import dev.eliezer.superticket.dto.UserResponseDTO;
 import dev.eliezer.superticket.service.UserService;
+import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.impl.AuthUserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -38,11 +39,11 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
     @ApiResponse(responseCode = "200", content = {
             @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class)))
     })
-
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Iterable<UserResponseDTO>> index(@RequestParam(value="search", defaultValue="") String search,
                                                            @RequestParam(value="type", defaultValue="") Long typeSearch ){
-        var allUsers = userService.index(search, typeSearch);
 
+        var allUsers = userService.index(search, typeSearch);
         return ResponseEntity.ok(allUsers);
     }
 
@@ -64,7 +65,12 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
                     @Content(schema = @Schema(implementation = UserResponseDTO.class))})
     @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = {
             @Content(schema = @Schema(implementation = Object.class))})
-    public ResponseEntity<UserResponseDTO> insert(@Valid @RequestBody User userToInsert){
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<UserResponseDTO> insert(@Valid @RequestBody User userToInsert, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole != 2) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         var userInserted = userService.insert(userToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -86,8 +92,15 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
     })
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> update(@Valid HttpServletRequest request, @RequestBody UserForUpdateRequestDTO userUpdate, @PathVariable Long id){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        Long tokenUserId = Long.valueOf(request.getAttribute("user_id").toString());
+        if (userRole == 3 || (userRole == 1 && !id.equals(tokenUserId))) {
+            throw new BusinessException("Unauthorized Access.");
+        }
+
+
         try {
-            var userUpdated = userService.update(id, userUpdate);
+            var userUpdated = userService.update(id, userUpdate, userRole);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(userUpdated.getId())
@@ -103,7 +116,11 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
     @ApiResponse(responseCode = "200", description = "User successfully deleted")
     @ApiResponse(responseCode = "404", description = "User not found")
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<String> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole != 2) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         userService.delete(id);
         return ResponseEntity.ok("user successfully deleted");
     }

@@ -13,7 +13,7 @@ public interface UserService {
 
     UserResponseDTO insert(User user);
 
-    UserResponseDTO update(Long id, UserForUpdateRequestDTO user);
+    UserResponseDTO update(Long id, UserForUpdateRequestDTO user, Long userRole);
 
     void delete (Long id);
     

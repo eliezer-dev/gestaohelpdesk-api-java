@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -83,6 +84,13 @@ public class User {
     @JsonIgnore
     private UserPicture userPicture;
 
-
+    @NotNull(message = "[userRole] is not provided.")
+    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description =
+            """
+            1 - support representative.
+            2 - manager.
+            3 - user test (read only)
+            """)
+    private Long userRole;
 
 }

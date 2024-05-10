@@ -46,7 +46,7 @@ public class AuthUserServiceImpl {
         var token = JWT.create()
                 .withIssuer("SuperTicket")
                 .withSubject(user.getId().toString())
-                .withClaim("roles", Arrays.asList("user"))
+                .withClaim("roles", Arrays.asList(user.getUserRole()))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
@@ -62,6 +62,7 @@ public class AuthUserServiceImpl {
                         .state(user.getState())
                         .city(user.getCity())
                         .neighborhood(user.getNeighborhood())
+                        .userRole(user.getUserRole())
                         .build())
                 .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())

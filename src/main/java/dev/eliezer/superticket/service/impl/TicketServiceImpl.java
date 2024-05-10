@@ -374,9 +374,15 @@ public class TicketServiceImpl implements TicketService {
 
         if (ticketRequestDTO.getUsers() != null) {
             ticketRequestDTO.getUsers().forEach(user ->{
-                if (!userRepository.existsById(user.getId()))
+                if (user.getId() == null) {
+                    throw new BusinessException("User id is invalid");
+                }
+
+                if (!userRepository.existsById(user.getId())) {
                     throw new BusinessException("User with id " + user.getId() + " does not exist.\n" +
                             "The operation was aborted.");
+                }
+
             });
         }
 

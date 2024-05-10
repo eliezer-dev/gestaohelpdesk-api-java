@@ -50,4 +50,11 @@ public class UserForUpdateRequestDTO {
     @Schema(example = "12345password", description = "new password")
     private String password;
 
+   @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description =
+            """
+            1 - support representative.
+            2 - manager.
+            3 - user test (read only)
+            """)
+    private Long userRole;
 }

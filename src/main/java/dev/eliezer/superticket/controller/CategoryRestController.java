@@ -3,6 +3,7 @@ package dev.eliezer.superticket.controller;
 import dev.eliezer.superticket.domain.model.Category;
 import dev.eliezer.superticket.domain.model.Status;
 import dev.eliezer.superticket.service.CategoryService;
+import dev.eliezer.superticket.service.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +55,11 @@ public record CategoryRestController (CategoryService categoryService) {
             @Content(schema = @Schema(implementation = Category.class))})
     @ApiResponse(responseCode = "422", description = "Invalid category data provided", content = {
             @Content(schema = @Schema(implementation = Object.class))})
-    public ResponseEntity<Category> insert(@Valid @RequestBody Category categoryToInsert) {
+    public ResponseEntity<Category> insert(@Valid @RequestBody Category categoryToInsert, HttpServletRequest request) {
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole != 2) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         var categoryInserted = categoryService.insert(categoryToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -71,7 +77,11 @@ public record CategoryRestController (CategoryService categoryService) {
             @Content(schema = @Schema(implementation = Object.class))})
     @ApiResponse(responseCode = "422", description = "Invalid category data provided", content = {
             @Content(schema = @Schema(implementation = Object.class))})
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category categoryToUpdate){
+    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category categoryToUpdate, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole != 2) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         var categoryUpdated = categoryService.update(id, categoryToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -86,7 +96,11 @@ public record CategoryRestController (CategoryService categoryService) {
             @ApiResponse(responseCode = "200", description = "Category successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    public ResponseEntity<String> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole != 2) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         categoryService.delete(id);
         return ResponseEntity.ok("category successfully deleted");
     }

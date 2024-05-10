@@ -57,4 +57,12 @@ public class UserResponseDTO {
     @Schema(example = "2024-03-25T10:30:00", description = "date and time the ticket was updated")
     private LocalDateTime updateAt;
 
+    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description =
+            """
+            1 - support representative.
+            2 - manager.
+            3 - user test (read only)
+            """)
+    private Long userRole;
+
 }

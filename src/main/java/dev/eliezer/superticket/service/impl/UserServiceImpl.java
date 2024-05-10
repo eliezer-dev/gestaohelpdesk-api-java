@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO update(Long id, UserForUpdateRequestDTO userUpdate) throws AuthenticationException {
+    public UserResponseDTO update(Long id, UserForUpdateRequestDTO userUpdate, Long userRole) throws AuthenticationException {
         Optional<User> userFound = userRepository.findByCpf(userUpdate.getCpf());
         if(userFound.isPresent() && userFound.get().getId() != id) {
             throw new BusinessException("[cpf] " + userUpdate.getCpf() + " já foi utilizado em outro cadastro.");
@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService {
         userToChange.setAddressNumber(userUpdate.getAddressNumber() != null ? userUpdate.getAddressNumber() : userToChange.getAddressNumber());
         userToChange.setEmail(userUpdate.getEmail() != null ? userUpdate.getEmail() : userToChange.getEmail());
         userToChange.setAddressNumber2(userUpdate.getAddressNumber2() != null ? userUpdate.getAddressNumber2() : userToChange.getAddressNumber2());
+        userToChange.setUserRole(userUpdate.getUserRole() != null && userRole == 2 ? userUpdate.getUserRole() : userToChange.getUserRole());
 
 
         if (userUpdate.getPassword() == null || userUpdate.getPassword().isEmpty()){
@@ -143,6 +144,7 @@ public class UserServiceImpl implements UserService {
 
         var passwordEncoded = passwordEncoder.encode(userUpdate.getPassword());
         userToChange.setPassword(passwordEncoded);
+
         userRepository.save(userToChange);
         return formatUserToUserResponseDTO(userToChange);
     }
@@ -168,6 +170,7 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .createAt(user.getCreateAt())
                 .updateAt(user.getUpdateAt())
+                .userRole(user.getUserRole())
                 .build();
         return userResponse;
 

@@ -2,6 +2,7 @@ package dev.eliezer.superticket.controller;
 
 import dev.eliezer.superticket.dto.*;
 import dev.eliezer.superticket.service.TicketService;
+import dev.eliezer.superticket.service.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -69,7 +70,11 @@ public record TicketRestController(TicketService ticketService) {
                 @Content(schema = @Schema(implementation = TicketResponseDTO.class))})
     @ApiResponse(responseCode = "422", description = "Invalid ticket data provided", content = {
                 @Content(schema = @Schema(implementation = Object.class))})
-    public ResponseEntity<TicketResponseDTO> insert(@Valid @RequestBody TicketRequestDTO ticketToInsert){
+    public ResponseEntity<TicketResponseDTO> insert(@Valid @RequestBody TicketRequestDTO ticketToInsert, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole == 3) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         var ticketInserted = ticketService.insert(ticketToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -87,7 +92,11 @@ public record TicketRestController(TicketService ticketService) {
             @Content(schema = @Schema(implementation = Object.class))})
     @ApiResponse(responseCode = "422", description = "Invalid ticket data provided", content = {
             @Content(schema = @Schema(implementation = Object.class))})
-    public ResponseEntity<TicketResponseDTO> update(@Valid @PathVariable Long id, @RequestBody TicketRequestDTO ticketToUpdate){
+    public ResponseEntity<TicketResponseDTO> update(@Valid @PathVariable Long id, @RequestBody TicketRequestDTO ticketToUpdate, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole == 3) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         var ticketUpdated = ticketService.update(id, ticketToUpdate);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -102,7 +111,11 @@ public record TicketRestController(TicketService ticketService) {
             @ApiResponse(responseCode = "200", description = "Ticket successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Ticket not found")
     })
-    public ResponseEntity<String> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id, HttpServletRequest request){
+        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+        if (userRole != 2) {
+            throw new BusinessException("Unauthorized Access.");
+        }
         ticketService.delete(id);
         return ResponseEntity.ok("ticket successfully deleted");
     }

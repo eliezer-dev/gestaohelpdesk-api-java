@@ -41,4 +41,12 @@ public class UserForAuthResponseDTO {
 
     @Schema(example = "Cidade Jardim", requiredMode = Schema.RequiredMode.REQUIRED, description = "neighborhood of client")
     String neighborhood;
+
+    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description =
+            """
+            1 - support representative.
+            2 - manager.
+            3 - user test (read only)
+            """)
+    private Long userRole;
 }
