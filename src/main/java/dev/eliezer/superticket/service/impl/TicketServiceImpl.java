@@ -4,20 +4,18 @@ import dev.eliezer.superticket.domain.model.*;
 import dev.eliezer.superticket.domain.repository.ClientRepository;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.domain.repository.TicketRepository;
-import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import dev.eliezer.superticket.dto.*;
+import dev.eliezer.superticket.modules.user.entities.User;
 import dev.eliezer.superticket.service.TicketService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -31,9 +29,6 @@ public class TicketServiceImpl implements TicketService {
     private UserRepository userRepository;
     @Autowired
     private StatusRepository statusRepository;
-
-    @Autowired
-    private UserServiceImpl userService;
 
     public List<TicketResponseDTO> index(Long userId, Long type, String search, Long searchType) {
         List<TicketResponseDTO> ticketsList = new ArrayList<>();

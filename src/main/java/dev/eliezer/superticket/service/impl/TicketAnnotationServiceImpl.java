@@ -2,30 +2,25 @@ package dev.eliezer.superticket.service.impl;
 
 import dev.eliezer.superticket.domain.model.Ticket;
 import dev.eliezer.superticket.domain.model.TicketAnnotation;
-import dev.eliezer.superticket.domain.model.User;
-import dev.eliezer.superticket.domain.model.UserPicture;
+import dev.eliezer.superticket.modules.user.entities.User;
+import dev.eliezer.superticket.modules.user.entities.UserPicture;
 import dev.eliezer.superticket.domain.repository.TicketAnnotationRepository;
 import dev.eliezer.superticket.domain.repository.TicketRepository;
-import dev.eliezer.superticket.domain.repository.UserPictureRepository;
-import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.modules.user.repositories.UserPictureRepository;
+import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import dev.eliezer.superticket.dto.TicketAnnotationRequestDTO;
 import dev.eliezer.superticket.dto.TicketAnnotationResponseDTO;
-import dev.eliezer.superticket.dto.TicketRequestDTO;
 import dev.eliezer.superticket.dto.UserForTicketResponseDTO;
 import dev.eliezer.superticket.providers.ImageUtil;
 import dev.eliezer.superticket.service.TicketAnnotationService;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import static dev.eliezer.superticket.providers.DiskStorage.getFiles;
 
 @Service
 public class TicketAnnotationServiceImpl implements TicketAnnotationService {

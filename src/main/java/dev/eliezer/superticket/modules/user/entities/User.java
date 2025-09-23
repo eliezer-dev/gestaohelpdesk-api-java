@@ -1,4 +1,4 @@
-package dev.eliezer.superticket.domain.model;
+package dev.eliezer.superticket.modules.user.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;

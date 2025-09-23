@@ -1,4 +1,4 @@
-package dev.eliezer.superticket.controller;
+package dev.eliezer.superticket.modules.user.controller;
 
 import dev.eliezer.superticket.service.impl.UserAvatarServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

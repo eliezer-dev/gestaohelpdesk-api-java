@@ -1,6 +1,6 @@
-package dev.eliezer.superticket.domain.repository;
+package dev.eliezer.superticket.modules.user.repositories;
 
-import dev.eliezer.superticket.domain.model.User;
+import dev.eliezer.superticket.modules.user.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

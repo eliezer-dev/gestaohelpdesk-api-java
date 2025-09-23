@@ -1,6 +1,6 @@
 package dev.eliezer.superticket.providers;
 
-import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

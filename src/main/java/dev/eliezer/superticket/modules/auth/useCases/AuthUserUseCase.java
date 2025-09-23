@@ -1,12 +1,11 @@
-package dev.eliezer.superticket.service.impl;
+package dev.eliezer.superticket.modules.auth.useCases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import dev.eliezer.superticket.domain.repository.UserRepository;
 import dev.eliezer.superticket.dto.AuthUserRequestDTO;
 import dev.eliezer.superticket.dto.AuthUserResponseDTO;
 import dev.eliezer.superticket.dto.UserForAuthResponseDTO;
-import jakarta.transaction.Transactional;
+import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +18,8 @@ import java.time.Instant;
 import java.util.Arrays;
 
 @Service
-public class AuthUserServiceImpl {
+public class AuthUserUseCase {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -70,5 +70,4 @@ public class AuthUserServiceImpl {
 
         return authUserResponse;
     }
-
 }

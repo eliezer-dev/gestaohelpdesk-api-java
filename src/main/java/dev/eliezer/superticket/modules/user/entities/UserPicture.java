@@ -1,4 +1,4 @@
-package dev.eliezer.superticket.domain.model;
+package dev.eliezer.superticket.modules.user.entities;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

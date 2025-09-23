@@ -1,12 +1,9 @@
 package dev.eliezer.superticket.service.impl;
 
 import dev.eliezer.superticket.domain.model.Status;
-import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.service.StatusService;
-import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

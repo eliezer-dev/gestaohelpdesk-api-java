@@ -1,7 +1,6 @@
 package dev.eliezer.superticket.controllers;
 
 import dev.eliezer.superticket.domain.model.Status;
-import dev.eliezer.superticket.domain.model.User;
 import dev.eliezer.superticket.domain.repository.StatusRepository;
 import dev.eliezer.superticket.utils.TestUtils;
 import org.junit.Before;

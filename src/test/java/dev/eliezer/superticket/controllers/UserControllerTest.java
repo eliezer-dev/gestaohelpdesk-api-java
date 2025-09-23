@@ -1,7 +1,7 @@
 package dev.eliezer.superticket.controllers;
 
-import dev.eliezer.superticket.domain.model.User;
-import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.modules.user.entities.User;
+import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import dev.eliezer.superticket.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;

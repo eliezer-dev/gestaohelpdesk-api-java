@@ -1,13 +1,12 @@
 package dev.eliezer.superticket.service.impl;
 
-import dev.eliezer.superticket.domain.model.User;
-import dev.eliezer.superticket.domain.model.UserPicture;
-import dev.eliezer.superticket.domain.repository.UserPictureRepository;
-import dev.eliezer.superticket.domain.repository.UserRepository;
+import dev.eliezer.superticket.modules.user.entities.User;
+import dev.eliezer.superticket.modules.user.entities.UserPicture;
+import dev.eliezer.superticket.modules.user.repositories.UserPictureRepository;
+import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import dev.eliezer.superticket.providers.ImageUtil;
 import dev.eliezer.superticket.service.exception.BusinessException;
 import dev.eliezer.superticket.service.exception.NotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

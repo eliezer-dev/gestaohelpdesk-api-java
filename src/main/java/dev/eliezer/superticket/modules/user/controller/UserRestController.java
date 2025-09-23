@@ -1,13 +1,10 @@
-package dev.eliezer.superticket.controller;
+package dev.eliezer.superticket.modules.user.controller;
 
-import dev.eliezer.superticket.domain.model.User;
-import dev.eliezer.superticket.dto.AuthUserRequestDTO;
-import dev.eliezer.superticket.dto.AuthUserResponseDTO;
+import dev.eliezer.superticket.modules.user.entities.User;
 import dev.eliezer.superticket.dto.UserForUpdateRequestDTO;
-import dev.eliezer.superticket.dto.UserResponseDTO;
-import dev.eliezer.superticket.service.UserService;
+import dev.eliezer.superticket.modules.user.dtos.UserResponseDTO;
+import dev.eliezer.superticket.modules.user.useCases.*;
 import dev.eliezer.superticket.service.exception.BusinessException;
-import dev.eliezer.superticket.service.impl.AuthUserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,17 +19,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Users", description = "RESTful API for managing users.")
-public record UserRestController (UserService userService, AuthUserServiceImpl authUserServiceImpl){
+public record UserRestController (FindUserUseCase findUserUseCase, FindUserByIdUseCase findUserByIdUseCase,
+                                  CreateUserUseCase createUserUseCase, UpdateUserUseCase updateUserUseCase,
+                                  DeleteUserUseCase deleteUserUseCase){
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")//annotation for Swagger
@@ -43,7 +39,7 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
     public ResponseEntity<Iterable<UserResponseDTO>> index(@RequestParam(value="search", defaultValue="") String search,
                                                            @RequestParam(value="type", defaultValue="") Long typeSearch ){
 
-        var allUsers = userService.index(search, typeSearch);
+        var allUsers = findUserUseCase.execute(search, typeSearch);
         return ResponseEntity.ok(allUsers);
     }
 
@@ -55,7 +51,7 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
             @Content(schema = @Schema(implementation = Object.class))})
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id){
-        var user = userService.findById(id);
+        var user = findUserByIdUseCase.execute(id);
         return ResponseEntity.ok(user);
     }
 
@@ -65,13 +61,13 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
                     @Content(schema = @Schema(implementation = UserResponseDTO.class))})
     @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = {
             @Content(schema = @Schema(implementation = Object.class))})
-    @SecurityRequirement(name = "jwt_auth")
+    //@SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<UserResponseDTO> insert(@Valid @RequestBody User userToInsert, HttpServletRequest request){
-        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
-        if (userRole != 2) {
-            throw new BusinessException("Unauthorized Access.");
-        }
-        var userInserted = userService.insert(userToInsert);
+//        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
+//        if (userRole != 2) {
+//            throw new BusinessException("Unauthorized Access.");
+//        }
+        var userInserted = createUserUseCase.execute(userToInsert);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(userInserted.getId())
@@ -100,7 +96,7 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
 
 
         try {
-            var userUpdated = userService.update(id, userUpdate, userRole);
+            var userUpdated = updateUserUseCase.execute(id, userUpdate, userRole);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(userUpdated.getId())
@@ -121,24 +117,11 @@ public record UserRestController (UserService userService, AuthUserServiceImpl a
         if (userRole != 2) {
             throw new BusinessException("Unauthorized Access.");
         }
-        userService.delete(id);
+        deleteUserUseCase.execute(id);
         return ResponseEntity.ok("user successfully deleted");
     }
 
-    @PostMapping("/auth")
-    @Operation(summary = "Authenticate a user", description = "Authenticate a user and generate a token")
-    @ApiResponse(responseCode = "200", description = "Token generated successfully", content = {
-            @Content(schema = @Schema(implementation = AuthUserResponseDTO.class))})
-    @ApiResponse(responseCode = "401", description = "Unauthorized user")
-    @Tag(name = "Auth", description = "RESTful API for managing users.")
-    public ResponseEntity<Object>auth(@RequestBody AuthUserRequestDTO authUserRequestDTO){
-        try {
-            var token = this.authUserServiceImpl.execute(authUserRequestDTO);
-            return ResponseEntity.ok().body(token);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-    }
+
 
 
 
