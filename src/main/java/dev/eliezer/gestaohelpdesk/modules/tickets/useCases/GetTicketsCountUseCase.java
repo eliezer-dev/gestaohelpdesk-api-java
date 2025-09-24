@@ -1,6 +1,6 @@
 package dev.eliezer.gestaohelpdesk.modules.tickets.useCases;
 
-import dev.eliezer.gestaohelpdesk.dto.TicketCountResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketCountResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package dev.eliezer.gestaohelpdesk.modules.tickets.useCases;
 
-import dev.eliezer.gestaohelpdesk.dto.TicketRequestDTO;
-import dev.eliezer.gestaohelpdesk.dto.TicketResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketRequestDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.entities.Ticket;
 import dev.eliezer.gestaohelpdesk.modules.tickets.repositories.TicketRepository;
 import dev.eliezer.gestaohelpdesk.modules.tickets.services.validations.TicketValidator;

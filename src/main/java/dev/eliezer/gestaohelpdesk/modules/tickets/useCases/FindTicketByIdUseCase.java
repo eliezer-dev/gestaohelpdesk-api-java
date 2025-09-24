@@ -1,6 +1,6 @@
 package dev.eliezer.gestaohelpdesk.modules.tickets.useCases;
 
-import dev.eliezer.gestaohelpdesk.dto.TicketResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.repositories.TicketRepository;
 import dev.eliezer.gestaohelpdesk.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

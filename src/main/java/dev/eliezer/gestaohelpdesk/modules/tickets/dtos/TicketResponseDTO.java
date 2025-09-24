@@ -1,5 +1,7 @@
-package dev.eliezer.gestaohelpdesk.dto;
+package dev.eliezer.gestaohelpdesk.modules.tickets.dtos;
 
+import dev.eliezer.gestaohelpdesk.modules.category.entities.Category;
+import dev.eliezer.gestaohelpdesk.modules.status.entities.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,13 +9,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TicketRequestDTO {
+public class TicketResponseDTO {
     @Schema(example = "9",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "id of ticket")
     private Long id;
@@ -23,10 +24,13 @@ public class TicketRequestDTO {
     @Schema(example = "Relatório de fechamento do caixa apresenta valores divergentes",
             requiredMode = Schema.RequiredMode.REQUIRED, description = "description of ticket")
     private String description;
-    private ClientForTicketRequestDTO client;
-    private List<UserForTicketRequestDTO> users;
-    private StatusForTicketRequestDTO status;
+    private ClientForTicketResponseDTO client;
+    private UserForTicketResponseDTO user;
+    private Status status;
     private Long typeOfService;
-    private CategoryForTicketRequestDTO category;
+    private Category category;
     private LocalDateTime scheduledDateTime;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+    private LocalDateTime slaDateTimeEnd;
 }

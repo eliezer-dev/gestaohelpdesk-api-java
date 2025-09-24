@@ -1,4 +1,4 @@
-package dev.eliezer.gestaohelpdesk.dto;
+package dev.eliezer.gestaohelpdesk.modules.tickets.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

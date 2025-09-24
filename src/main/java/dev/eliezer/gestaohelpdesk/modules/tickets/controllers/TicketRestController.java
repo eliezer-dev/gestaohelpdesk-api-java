@@ -1,6 +1,8 @@
 package dev.eliezer.gestaohelpdesk.modules.tickets.controllers;
 
-import dev.eliezer.gestaohelpdesk.dto.*;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketCountResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketRequestDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.useCases.*;
 import dev.eliezer.gestaohelpdesk.service.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;

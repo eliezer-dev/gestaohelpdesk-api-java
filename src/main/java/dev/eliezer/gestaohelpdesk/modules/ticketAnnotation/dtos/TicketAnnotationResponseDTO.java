@@ -1,5 +1,6 @@
-package dev.eliezer.gestaohelpdesk.dto;
+package dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.dtos;
 
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.UserForTicketResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

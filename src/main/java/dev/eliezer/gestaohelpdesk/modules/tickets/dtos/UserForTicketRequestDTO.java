@@ -1,4 +1,4 @@
-package dev.eliezer.gestaohelpdesk.dto;
+package dev.eliezer.gestaohelpdesk.modules.tickets.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryForTicketRequestDTO {
-    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description = "id of category")
+public class UserForTicketRequestDTO {
+    @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description = "id of user")
     private Long id;
 }

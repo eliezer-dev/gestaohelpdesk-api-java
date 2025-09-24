@@ -2,7 +2,7 @@ package dev.eliezer.gestaohelpdesk.modules.tickets.services.validations;
 
 import dev.eliezer.gestaohelpdesk.modules.client.repositories.ClientRepository;
 import dev.eliezer.gestaohelpdesk.modules.status.repositories.StatusRepository;
-import dev.eliezer.gestaohelpdesk.dto.TicketRequestDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.TicketRequestDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.repositories.TicketRepository;
 import dev.eliezer.gestaohelpdesk.modules.user.repositories.UserRepository;
 import dev.eliezer.gestaohelpdesk.service.exception.BusinessException;

@@ -1,8 +1,8 @@
 package dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.mappers;
 
-import dev.eliezer.gestaohelpdesk.dto.TicketAnnotationRequestDTO;
-import dev.eliezer.gestaohelpdesk.dto.TicketAnnotationResponseDTO;
-import dev.eliezer.gestaohelpdesk.dto.UserForTicketResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.dtos.TicketAnnotationRequestDTO;
+import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.dtos.TicketAnnotationResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.tickets.dtos.UserForTicketResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.entities.Ticket;
 import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.entities.TicketAnnotation;
 import dev.eliezer.gestaohelpdesk.modules.user.entities.User;

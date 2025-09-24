@@ -1,8 +1,8 @@
 package dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.controllers;
 
 import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.entities.TicketAnnotation;
-import dev.eliezer.gestaohelpdesk.dto.TicketAnnotationRequestDTO;
-import dev.eliezer.gestaohelpdesk.dto.TicketAnnotationResponseDTO;
+import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.dtos.TicketAnnotationRequestDTO;
+import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.dtos.TicketAnnotationResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.useCases.DeleteTicketAnnotationUseCase;
 import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.useCases.FindTicketAnnotationByIdUseCase;
 import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.useCases.FindTicketAnnotationByTicketIdUseCase;

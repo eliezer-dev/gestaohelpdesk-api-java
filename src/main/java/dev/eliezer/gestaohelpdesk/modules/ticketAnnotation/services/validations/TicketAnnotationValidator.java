@@ -1,6 +1,6 @@
 package dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.services.validations;
 
-import dev.eliezer.gestaohelpdesk.dto.TicketAnnotationRequestDTO;
+import dev.eliezer.gestaohelpdesk.modules.ticketAnnotation.dtos.TicketAnnotationRequestDTO;
 import dev.eliezer.gestaohelpdesk.modules.tickets.repositories.TicketRepository;
 import dev.eliezer.gestaohelpdesk.modules.user.repositories.UserRepository;
 import dev.eliezer.gestaohelpdesk.service.exception.BusinessException;
