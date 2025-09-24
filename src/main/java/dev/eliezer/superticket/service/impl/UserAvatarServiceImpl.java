@@ -1,8 +1,8 @@
 package dev.eliezer.superticket.service.impl;
 
 import dev.eliezer.superticket.modules.user.entities.User;
-import dev.eliezer.superticket.modules.user.entities.UserPicture;
-import dev.eliezer.superticket.modules.user.repositories.UserPictureRepository;
+import dev.eliezer.superticket.modules.userAvatar.entities.UserPicture;
+import dev.eliezer.superticket.modules.userAvatar.repositories.UserPictureRepository;
 import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import dev.eliezer.superticket.providers.ImageUtil;
 import dev.eliezer.superticket.service.exception.BusinessException;

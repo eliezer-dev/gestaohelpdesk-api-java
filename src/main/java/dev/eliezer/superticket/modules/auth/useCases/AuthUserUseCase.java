@@ -2,9 +2,9 @@ package dev.eliezer.superticket.modules.auth.useCases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import dev.eliezer.superticket.dto.AuthUserRequestDTO;
-import dev.eliezer.superticket.dto.AuthUserResponseDTO;
-import dev.eliezer.superticket.dto.UserForAuthResponseDTO;
+import dev.eliezer.superticket.modules.auth.dtos.AuthUserRequestDTO;
+import dev.eliezer.superticket.modules.auth.dtos.AuthUserResponseDTO;
+import dev.eliezer.superticket.modules.auth.dtos.UserForAuthResponseDTO;
 import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,7 +1,7 @@
 package dev.eliezer.superticket.service.impl;
 
-import dev.eliezer.superticket.domain.model.Status;
-import dev.eliezer.superticket.domain.repository.StatusRepository;
+import dev.eliezer.superticket.modules.status.entities.Status;
+import dev.eliezer.superticket.modules.status.repositories.StatusRepository;
 import dev.eliezer.superticket.service.StatusService;
 import dev.eliezer.superticket.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

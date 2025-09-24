@@ -1,6 +1,6 @@
 package dev.eliezer.superticket.service;
 
-import dev.eliezer.superticket.domain.model.Status;
+import dev.eliezer.superticket.modules.status.entities.Status;
 
 public interface StatusService {
     Iterable<Status> findAll();

@@ -1,6 +1,7 @@
 package dev.eliezer.superticket.modules.user.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.eliezer.superticket.modules.userAvatar.entities.UserPicture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

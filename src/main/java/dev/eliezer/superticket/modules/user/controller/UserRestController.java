@@ -1,7 +1,7 @@
 package dev.eliezer.superticket.modules.user.controller;
 
 import dev.eliezer.superticket.modules.user.entities.User;
-import dev.eliezer.superticket.dto.UserForUpdateRequestDTO;
+import dev.eliezer.superticket.modules.user.dtos.UserForUpdateRequestDTO;
 import dev.eliezer.superticket.modules.user.dtos.UserResponseDTO;
 import dev.eliezer.superticket.modules.user.useCases.*;
 import dev.eliezer.superticket.service.exception.BusinessException;

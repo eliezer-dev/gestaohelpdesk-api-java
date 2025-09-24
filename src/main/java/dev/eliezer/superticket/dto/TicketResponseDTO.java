@@ -1,7 +1,7 @@
 package dev.eliezer.superticket.dto;
 
-import dev.eliezer.superticket.domain.model.Category;
-import dev.eliezer.superticket.domain.model.Status;
+import dev.eliezer.superticket.modules.category.entities.Category;
+import dev.eliezer.superticket.modules.status.entities.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @Builder

@@ -1,7 +1,7 @@
 package dev.eliezer.superticket.modules.auth.controllers;
 
-import dev.eliezer.superticket.dto.AuthUserRequestDTO;
-import dev.eliezer.superticket.dto.AuthUserResponseDTO;
+import dev.eliezer.superticket.modules.auth.dtos.AuthUserRequestDTO;
+import dev.eliezer.superticket.modules.auth.dtos.AuthUserResponseDTO;
 import dev.eliezer.superticket.modules.auth.useCases.AuthUserUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

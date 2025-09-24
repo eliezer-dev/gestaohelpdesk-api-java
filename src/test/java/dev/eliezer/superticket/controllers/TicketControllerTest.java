@@ -1,12 +1,12 @@
 package dev.eliezer.superticket.controllers;
 
-import dev.eliezer.superticket.domain.model.Client;
-import dev.eliezer.superticket.domain.model.Status;
-import dev.eliezer.superticket.domain.model.Ticket;
+import dev.eliezer.superticket.modules.client.entities.Client;
+import dev.eliezer.superticket.modules.status.entities.Status;
+import dev.eliezer.superticket.modules.tickets.entities.Ticket;
 import dev.eliezer.superticket.modules.user.entities.User;
-import dev.eliezer.superticket.domain.repository.ClientRepository;
-import dev.eliezer.superticket.domain.repository.StatusRepository;
-import dev.eliezer.superticket.domain.repository.TicketRepository;
+import dev.eliezer.superticket.modules.client.repositories.ClientRepository;
+import dev.eliezer.superticket.modules.status.repositories.StatusRepository;
+import dev.eliezer.superticket.modules.tickets.repositories.TicketRepository;
 import dev.eliezer.superticket.modules.user.repositories.UserRepository;
 import dev.eliezer.superticket.dto.ClientForTicketRequestDTO;
 import dev.eliezer.superticket.dto.StatusForTicketRequestDTO;

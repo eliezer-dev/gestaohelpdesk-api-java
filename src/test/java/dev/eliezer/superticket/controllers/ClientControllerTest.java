@@ -1,7 +1,7 @@
 package dev.eliezer.superticket.controllers;
 
-import dev.eliezer.superticket.domain.model.Client;
-import dev.eliezer.superticket.domain.repository.ClientRepository;
+import dev.eliezer.superticket.modules.client.entities.Client;
+import dev.eliezer.superticket.modules.client.repositories.ClientRepository;
 import dev.eliezer.superticket.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
