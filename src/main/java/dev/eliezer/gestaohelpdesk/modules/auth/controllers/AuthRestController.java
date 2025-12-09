@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public record AuthRestController(AuthUserUseCase authUserUseCase) {
 
     @PostMapping
-    @Operation(summary = "Authenticate a user", description = "Authenticate a user and generate a token")
+    @Operation(summary = "Authenticate a user",
+            description = "Authenticate a user and generate a token")
     @ApiResponse(responseCode = "200", description = "Token generated successfully", content = {
             @Content(schema = @Schema(implementation = AuthUserResponseDTO.class))})
     @ApiResponse(responseCode = "401", description = "Unauthorized user")

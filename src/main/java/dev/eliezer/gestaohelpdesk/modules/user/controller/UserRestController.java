@@ -1,5 +1,6 @@
 package dev.eliezer.gestaohelpdesk.modules.user.controller;
 
+import dev.eliezer.gestaohelpdesk.modules.user.dtos.UserRequestDTO;
 import dev.eliezer.gestaohelpdesk.modules.user.entities.User;
 import dev.eliezer.gestaohelpdesk.modules.user.dtos.UserForUpdateRequestDTO;
 import dev.eliezer.gestaohelpdesk.modules.user.dtos.UserResponseDTO;
@@ -62,12 +63,12 @@ public record UserRestController (FindUserUseCase findUserUseCase, FindUserByIdU
     @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = {
             @Content(schema = @Schema(implementation = Object.class))})
     //@SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<UserResponseDTO> insert(@Valid @RequestBody User userToInsert, HttpServletRequest request){
+    public ResponseEntity<UserResponseDTO> insert(@Valid @RequestBody UserRequestDTO userData, HttpServletRequest request){
 //        Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
 //        if (userRole != 2) {
 //            throw new BusinessException("Unauthorized Access.");
 //        }
-        var userInserted = createUserUseCase.execute(userToInsert);
+        var userInserted = createUserUseCase.execute(userData);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(userInserted.getId())

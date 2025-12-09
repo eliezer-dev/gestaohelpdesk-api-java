@@ -1,5 +1,6 @@
 package dev.eliezer.gestaohelpdesk.modules.user.useCases;
 
+import dev.eliezer.gestaohelpdesk.modules.user.dtos.UserRequestDTO;
 import dev.eliezer.gestaohelpdesk.modules.user.dtos.UserResponseDTO;
 import dev.eliezer.gestaohelpdesk.modules.user.entities.User;
 import dev.eliezer.gestaohelpdesk.modules.user.repositories.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static dev.eliezer.gestaohelpdesk.modules.user.mappers.UserMapper.formatUserRequestDTOToUser;
 import static dev.eliezer.gestaohelpdesk.modules.user.mappers.UserMapper.formatUserToUserResponseDTO;
 
 @Service
@@ -21,24 +23,32 @@ public class CreateUserUseCase {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserResponseDTO execute(User user) {
-        Optional<User> userFound = userRepository.findByCpf(user.getCpf());
+    public UserResponseDTO execute(UserRequestDTO userData) {
+
+        Optional<User> userFound = userRepository.findByCpf(userData.cpf());
+
         if(userFound.isPresent()) {
             userFound = null;
-            throw new BusinessException("[cpf] " + user.getCpf() + " já foi utilizado em outro cadastro.");
+            throw new BusinessException("[cpf] " + userData.cpf() + " já foi utilizado em outro cadastro.");
         }
 
-        userFound = userRepository.findByEmail(user.getEmail());
+        userFound = userRepository.findByEmail(userData.email());
+
         if(userFound.isPresent()) {
-            throw new BusinessException("[email] " + user.getEmail() + " já foi utilizado em outro cadastro.");
+            throw new BusinessException("[email] " + userData.email() + " já foi utilizado em outro cadastro.");
         }
 
-        if (user.getPassword() == null) {
+        if (userData.password() == null) {
             throw new BusinessException("Senha não informada");
         }
-        var passwordEncoded = passwordEncoder.encode(user.getPassword());
-        user.setPassword(passwordEncoded);
-        var userToInsert = userRepository.save(user);
-        return formatUserToUserResponseDTO(userToInsert);
+
+        var passwordEncoded = passwordEncoder.encode(userData.password());
+
+        var userToSave = formatUserRequestDTOToUser(userData);
+        userToSave.setPassword(passwordEncoded);
+
+        var userSaved = userRepository.save(userToSave);
+
+        return formatUserToUserResponseDTO(userSaved);
     }
 }
