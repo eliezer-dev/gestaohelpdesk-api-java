@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,7 +25,8 @@ public class SecurityConfig {
     private SecurityUserFilter securityUserFilter;
 
     private static final String[] SWAGGER_LIST = {
-            "/swagger-ui/*",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/documentation"
@@ -38,16 +40,25 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth
                             .requestMatchers("/users").permitAll()
+                            .requestMatchers("/auth").permitAll()
                             .requestMatchers("/users/auth").permitAll()
                             .requestMatchers(SWAGGER_LIST).permitAll()
-                            .requestMatchers("/system/status").permitAll();
+                            .requestMatchers("/system/status").permitAll()
+                            .requestMatchers("/ai").permitAll();
                     auth.anyRequest().authenticated();
                 })
                .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
+        // Desabilita autenticação HTTP Basic para evitar prompt de login do navegador
         //http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+        //http.httpBasic(withDefaults());
         return http.build();
 
+    }
+
+    // Ignora completamente os endpoints do Swagger da cadeia de segurança para evitar 401/403 acidentais
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(SWAGGER_LIST);
     }
     @Bean
     public PasswordEncoder passwordEncoder(){

@@ -8,11 +8,17 @@ spring:
     hibernate:
       ddl-auto: ${DDLAUTO:update}
       debug: false
-
+  ai:
+    google:
+      genai:
+        api-key: ${GOOGLE_API_KEY}
 springdoc:
   swagger-ui:
     path: /documentation
     disable-swagger-default-url: true
+
+
+
 
 security:
   token:

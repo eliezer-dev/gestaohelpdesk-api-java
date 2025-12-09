@@ -54,5 +54,21 @@ public class SecurityUserFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request,response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String uri = request.getRequestURI();
+        // Evita interferir nas rotas públicas da documentação (Swagger) e outras públicas explícitas
+        return uri.startsWith("/swagger-ui")
+                || uri.equals("/swagger-ui.html")
+                || uri.startsWith("/v3/api-docs")
+                || uri.startsWith("/swagger-resources")
+                || uri.equals("/documentation")
+                || uri.equals("/system/status")
+                || uri.equals("/auth")
+                || uri.equals("/users")
+                || uri.equals("/users/auth")
+                || uri.equals("/ai");
+    }
 }
 
