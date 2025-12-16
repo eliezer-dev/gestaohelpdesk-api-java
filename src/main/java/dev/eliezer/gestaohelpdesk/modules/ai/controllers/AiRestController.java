@@ -1,5 +1,6 @@
 package dev.eliezer.gestaohelpdesk.modules.ai.controllers;
 
+import dev.eliezer.gestaohelpdesk.modules.ai.useCases.SummarizeTicketUseCase;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -15,24 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "jwt_auth")
 public class AiRestController {
 
-    private final ChatModel chatModel;
+    private final SummarizeTicketUseCase summarizeTicketUseCase;
 
-    public AiRestController(ChatModel chatModel) {
-        this.chatModel = chatModel;
+    public AiRestController(SummarizeTicketUseCase summarizeTicketUseCase) {
+        this.summarizeTicketUseCase = summarizeTicketUseCase;
     }
 
     // Exemplo simples para testar um prompt no Gemini via Spring AI
-    @GetMapping("/ai")
     public String generation(@RequestParam("q") String userInput) {
-        ChatResponse response = chatModel.call(
-                new Prompt(
-                        userInput,
-                        GoogleGenAiChatOptions.builder()
-                                .temperature(0.4)
-                                .build()
-                ));
-
-        // Extrai o conteúdo textual da resposta
-        return response.getResult().getOutput().getText();
+        return summarizeTicketUseCase.execute(userInput);
     }
 }

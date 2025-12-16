@@ -69,6 +69,8 @@ public class Ticket {
     @Schema(example = "2024-03-25T10:30:00", description ="date and time the ticket was updated")
     private LocalDateTime updateAt;
 
+    private String aiSummarizeTicket;
+
 
 
 

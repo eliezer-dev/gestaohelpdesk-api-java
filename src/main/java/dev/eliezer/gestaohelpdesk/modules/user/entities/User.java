@@ -94,7 +94,7 @@ public class User {
     @NotNull(message = "[userRole] is not provided.")
     @Schema(example = "1", requiredMode = Schema.RequiredMode.REQUIRED, description =
             """
-            1 - support representative.
+            1 - support agent.
             2 - manager.
             3 - user test (read only)
             """)

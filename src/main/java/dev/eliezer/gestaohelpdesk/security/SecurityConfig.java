@@ -71,6 +71,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("https://gestaohelpdesk.eliezer.tec.br");
         configuration.addAllowedOrigin("https://main.d1765lu4pm17ty.amplifyapp.com");
+        configuration.addAllowedOrigin("localhost:5173");
         configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedOrigin("localhost:5173");
         configuration.addAllowedOriginPattern("*");

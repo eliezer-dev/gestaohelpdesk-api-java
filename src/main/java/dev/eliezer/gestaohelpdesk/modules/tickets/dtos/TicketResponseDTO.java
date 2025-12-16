@@ -33,4 +33,5 @@ public class TicketResponseDTO {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private LocalDateTime slaDateTimeEnd;
+    private String aiSummarizeTicket;
 }

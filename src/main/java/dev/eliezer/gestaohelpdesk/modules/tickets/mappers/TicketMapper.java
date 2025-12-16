@@ -66,6 +66,7 @@ public class TicketMapper {
                 .createAt(ticket.getCreateAt())
                 .updateAt(!(ticket.getUpdateAt() == null) ? ticket.getUpdateAt() : ticket.getCreateAt())
                 .slaDateTimeEnd(slaDateTimeEnd)
+                .aiSummarizeTicket(ticket.getAiSummarizeTicket())
                 .build();
         return ticketsReponse;
     }

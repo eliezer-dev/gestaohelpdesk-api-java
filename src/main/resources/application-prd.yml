@@ -13,6 +13,7 @@ springdoc:
   swagger-ui:
     path: /documentation
     disable-swagger-default-url: true
+    persistAuthorization: true
 
 security:
   token:

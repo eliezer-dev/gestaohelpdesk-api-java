@@ -3,6 +3,7 @@ package dev.eliezer.gestaohelpdesk.modules.client.controllers;
 import dev.eliezer.gestaohelpdesk.modules.client.entities.Client;
 import dev.eliezer.gestaohelpdesk.modules.client.useCases.*;
 import dev.eliezer.gestaohelpdesk.service.exception.BusinessException;
+import dev.eliezer.gestaohelpdesk.shared.VARIABLES;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -60,7 +61,7 @@ public record ClientRestController(FindClientUseCase findClientUseCase,
             @Content(schema = @Schema(implementation = Object.class))})
     public ResponseEntity<Client> insert(@Valid @RequestBody Client clientToInsert, HttpServletRequest request){
         Long userRole = Long.valueOf(request.getAttribute("user_role").toString());
-        if (userRole != 2) {
+        if (userRole != VARIABLES.USER_ROLE_MANAGER) {
             throw new BusinessException("Unauthorized Access.");
         }
         var clientInserted = insertClientUseCase.execute(clientToInsert);
